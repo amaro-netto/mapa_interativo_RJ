@@ -1,0 +1,28 @@
+/* Estilo base para todos os bairros */
+.bairro {
+    fill: #cccccc; /* Cor cinza padrão */
+    stroke: #ffffff; /* Cor da borda */
+    stroke-width: 2px; /* Largura da borda */
+    transition: fill 0.3s ease; /* Transição suave da cor */
+}
+
+/* Estilo para o bairro quando o mouse está sobre ele */
+.bairro:hover {
+    fill: #ffcc00; /* Cor amarela de destaque */
+    cursor: pointer; /* Muda o cursor para a mãozinha */
+}
+
+/* Layout básico da página */
+.container {
+    display: flex;
+    gap: 20px;
+}
+#mapa-container {
+    width: 60%;
+}
+#info-painel {
+    width: 35%;
+    padding: 15px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+}
