@@ -1,28 +1,79 @@
-/* Estilo base para todos os bairros */
-.bairro {
-    fill: #cccccc; /* Cor cinza padrão */
-    stroke: #ffffff; /* Cor da borda */
-    stroke-width: 2px; /* Largura da borda */
-    transition: fill 0.3s ease; /* Transição suave da cor */
+/* Importa uma fonte do Google Fonts para deixar o site mais estiloso */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* --- Configurações Globais --- */
+body {
+    font-family: 'Roboto', sans-serif; /* Define a fonte padrão */
+    background-color: #f4f7f6; /* Um cinza bem claro para o fundo */
+    color: #333; /* Cor do texto principal */
+    margin: 20px; /* Adiciona uma margem em volta do corpo da página */
+    text-align: center; /* Centraliza o texto do h1 e p */
 }
 
-/* Estilo para o bairro quando o mouse está sobre ele */
-.bairro:hover {
-    fill: #ffcc00; /* Cor amarela de destaque */
-    cursor: pointer; /* Muda o cursor para a mãozinha */
+/* --- Layout Principal --- */
+.container-principal {
+    display: flex; /* ATIVA O FLEXBOX: modo de layout moderno e poderoso */
+    flex-wrap: wrap; /* Permite que os itens quebrem para a linha de baixo em telas pequenas */
+    gap: 20px; /* Espaço entre o mapa e o painel de informações */
+    justify-content: center; /* Centraliza os itens no container */
+    margin-top: 30px;
 }
 
-/* Layout básico da página */
-.container {
-    display: flex;
-    gap: 20px;
-}
 #mapa-container {
-    width: 60%;
+    flex-basis: 600px; /* Define uma largura base para o container do mapa */
+    max-width: 100%; /* Garante que o mapa não fique maior que a tela */
 }
+
 #info-painel {
-    width: 35%;
-    padding: 15px;
-    background-color: #f0f0f0;
-    border-radius: 8px;
+    flex-basis: 350px; /* Define uma largura base para o painel de informações */
+    background-color: #ffffff; /* Fundo branco para o painel */
+    border: 1px solid #ddd; /* Borda sutil */
+    border-radius: 8px; /* Bordas arredondadas */
+    padding: 25px; /* Espaçamento interno */
+    text-align: left; /* Alinha o texto do painel à esquerda */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05); /* Sombra suave para dar profundidade */
+}
+
+/* --- Estilos do Mapa SVG --- */
+#mapa-rio {
+    width: 100%; /* Faz o SVG ocupar todo o espaço do seu container */
+    height: auto; /* Mantém a proporção do mapa */
+}
+
+/* Estilo padrão para TODOS os bairros (usando a classe .bairro) */
+.bairro {
+    fill: #b0c4de; /* Cor de preenchimento (azul aço claro) */
+    stroke: #ffffff; /* Cor da borda (branca) */
+    stroke-width: 2; /* Largura da borda */
+    transition: fill 0.2s ease-in-out; /* Animação SUAVE da cor ao passar o mouse */
+}
+
+/* Efeito ao passar o mouse sobre um bairro */
+.bairro:hover {
+    fill: #ffc107; /* Muda a cor para um amarelo vibrante */
+    cursor: pointer; /* Muda o cursor do mouse para a "mãozinha" */
+}
+
+/* Estilo para o bairro que está ATUALMENTE SELECIONADO */
+.bairro.selecionado {
+    fill: #28a745; /* Cor verde para indicar seleção */
+}
+
+/* --- Estilos do Painel de Informações --- */
+#info-painel h2 {
+    margin-top: 0;
+    color: #0056b3; /* Cor azul escura para o título do bairro */
+}
+
+/* Estilo para os pontos de interesse que serão criados pelo JavaScript */
+.ponto-interesse {
+    background-color: #e9ecef;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 5px;
+    border-left: 4px solid #0056b3;
+}
+
+.ponto-interesse h4 {
+    margin: 0 0 5px 0;
 }
