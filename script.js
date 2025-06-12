@@ -28,35 +28,75 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const svgMapa = svgDoc.documentElement;
         const todasAsRegioes = svgDoc.querySelectorAll('.regiao');
-        const todosOsBairros = svgDoc.querySelectorAll('.bairro');
         
         const viewBoxOriginal = svgMapa.getAttribute('viewBox');
         let elementoSelecionado = null;
+        let controladorDeEventos = null; // Guarda o nosso "controle remoto" de eventos
+
+        // Função para exibir as informações de um município
+        const exibirInfoMunicipio = (municipioElement) => {
+            const municipioId = municipioElement.dataset.id || municipioElement.id;
+            const dados = dadosMunicipios[municipioId];
+
+            if (elementoSelecionado) {
+                elementoSelecionado.classList.remove('selecionado');
+            }
+            municipioElement.classList.add('selecionado');
+            elementoSelecionado = municipioElement;
+
+            if (dados) {
+                painelInfo.innerHTML = `<h2>${dados.nome}</h2><p>${dados.descricao || "Nenhuma descrição disponível."}</p>`;
+            } else {
+                let nomeFormatado = municipioId.replace(/[-_]/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+                painelInfo.innerHTML = `<h2>${nomeFormatado}</h2><p>Dados para este município ainda não cadastrados.</p>`;
+            }
+        };
 
         const zoomNaRegiao = (regiaoClicada) => {
             const bbox = regiaoClicada.getBBox();
             const padding = 20;
             const novoViewBox = `${bbox.x - padding} ${bbox.y - padding} ${bbox.width + (padding * 2)} ${bbox.height + (padding * 2)}`;
             
-            // 1. Aplica o zoom no SVG
             svgMapa.setAttribute('viewBox', novoViewBox);
             
-            // 2. Adiciona as classes para o CSS fazer sua mágica
-            mapaContainer.classList.add('mapa-zoom-ativo');
-            regiaoClicada.classList.add('foco');
+            // ================== NOVA LÓGICA DE EVENTOS ==================
             
-            // 3. Mostra o botão de voltar
+            // 1. Se já existirem eventos de clique antigos, remove todos eles.
+            if (controladorDeEventos) {
+                controladorDeEventos.abort();
+            }
+            // 2. Cria um novo "controle remoto" para os novos eventos.
+            controladorDeEventos = new AbortController();
+
+            // 3. Adiciona eventos de clique APENAS nos municípios da região em foco.
+            const bairrosDaRegiao = regiaoClicada.querySelectorAll('.bairro');
+            bairrosDaRegiao.forEach(bairro => {
+                bairro.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    exibirInfoMunicipio(bairro);
+                }, { signal: controladorDeEventos.signal }); // Conecta o evento ao nosso controle.
+            });
+            
+            mapaContainer.classList.add('mapa-zoom-ativo');
+            todasAsRegioes.forEach(r => r.classList.remove('foco')); // Limpa o foco antigo
+            regiaoClicada.classList.add('foco'); // Adiciona foco na nova região
             btnVoltar.classList.remove('hidden');
         };
 
         const resetarZoom = () => {
             svgMapa.setAttribute('viewBox', viewBoxOriginal);
-            
-            // Limpa as classes de estado
             mapaContainer.classList.remove('mapa-zoom-ativo');
+            
             const regiaoEmFoco = svgDoc.querySelector('.regiao.foco');
             if (regiaoEmFoco) {
                 regiaoEmFoco.classList.remove('foco');
+            }
+            
+            // ================== NOVA LÓGICA DE EVENTOS ==================
+            // 4. Ao voltar, remove todos os eventos de clique dos municípios que estavam ativos.
+            if (controladorDeEventos) {
+                controladorDeEventos.abort();
+                controladorDeEventos = null;
             }
 
             btnVoltar.classList.add('hidden');
@@ -68,50 +108,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        const exibirInfoMunicipio = (municipioElement) => {
-            const municipioId = municipioElement.dataset.id || municipioElement.id;
-            const dados = dadosMunicipios[municipioId];
-
-            if (elementoSelecionado) {
-                elementoSelecionado.classList.remove('selecionado');
-            }
-
-            municipioElement.classList.add('selecionado');
-            elementoSelecionado = municipioElement;
-
-            if (dados) {
-                painelInfo.innerHTML = `
-                    <h2>${dados.nome}</h2>
-                    <p>${dados.descricao || "Nenhuma descrição disponível."}</p>
-                `;
-            } else {
-                let nomeFormatado = municipioId.replace(/[-_]/g, " ");
-                nomeFormatado = nomeFormatado.charAt(0).toUpperCase() + nomeFormatado.slice(1);
-                painelInfo.innerHTML = `
-                    <h2>${nomeFormatado}</h2>
-                    <p>Dados para este município ainda não cadastrados.</p>
-                `;
-            }
-        };
-
-        // --- EVENTOS DE CLIQUE ---
-
+        // --- EVENTOS DE CLIQUE INICIAIS ---
         todasAsRegioes.forEach(regiao => {
             regiao.addEventListener('click', () => {
                 zoomNaRegiao(regiao);
             });
         });
-
-        todosOsBairros.forEach(bairro => {
-            bairro.addEventListener('click', () => {
-                exibirInfoMunicipio(bairro);
-            });
-        });
         
         btnVoltar.addEventListener('click', resetarZoom);
-    });
-
-    mapaObjeto.addEventListener('error', () => {
-        console.error("ERRO: O arquivo 'mapa.svg' não pôde ser carregado.");
     });
 });

@@ -1,10 +1,6 @@
 /* --- GERAL E FONTES --- */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
-* {
-    box-sizing: border-box;
-}
-
+* { box-sizing: border-box; }
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #f0f2f5;
@@ -13,112 +9,51 @@ body {
     padding: 2em;
     text-align: center;
 }
+h1 { color: #2c3e50; font-weight: 700; }
 
-/* --- LAYOUT PRINCIPAL --- */
-h1 {
-    color: #2c3e50;
-    font-weight: 700;
-}
-
+/* --- LAYOUT --- */
 .container-principal {
-    display: flex;
-    flex-wrap: wrap; 
-    gap: 30px; 
-    justify-content: center;
-    align-items: flex-start;
-    margin-top: 20px;
-    max-width: 1600px;
-    margin-left: auto;
-    margin-right: auto;
+    display: flex; flex-wrap: wrap; gap: 30px; 
+    justify-content: center; align-items: flex-start;
+    margin-top: 20px; max-width: 1600px; margin-left: auto; margin-right: auto;
 }
-
-/* --- MAPA E PAINEL DE INFORMAÇÕES --- */
-
 #mapa-container {
-    flex: 3; 
-    max-width: 900px; 
-    min-width: 400px; 
-    position: relative;
-    aspect-ratio: 4 / 3;
+    flex: 3; max-width: 900px; min-width: 400px; 
+    position: relative; aspect-ratio: 4 / 3;
 }
-
 #mapa-objeto {
-    width: 100%;
-    height: 100%;
-    display: block;
-    border-radius: 12px;
-    background-color: #ffffff;
+    width: 100%; height: 100%; display: block;
+    border-radius: 12px; background-color: #ffffff;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.6s ease-in-out;
 }
-
 #info-painel {
-    flex: 1;
-    min-width: 340px;
-    max-width: 400px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 25px;
-    text-align: left;
+    flex: 1; min-width: 340px; max-width: 400px;
+    background-color: #ffffff; border-radius: 12px;
+    padding: 25px; text-align: left;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
-
 #info-painel h2 {
-    margin-top: 0;
-    color: #34495e;
-    border-bottom: 2px solid #e7eaf3;
-    padding-bottom: 10px;
+    margin-top: 0; color: #34495e;
+    border-bottom: 2px solid #e7eaf3; padding-bottom: 10px;
 }
 
-/* --- ESTILOS DE INTERATIVIDADE (VERSÃO FINAL) --- */
-
+/* --- INTERATIVIDADE --- */
 #btn-voltar {
-    position: absolute;
-    top: 25px;
-    left: 25px;
-    z-index: 100;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: 700;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 50px;
-    cursor: pointer;
+    position: absolute; top: 25px; left: 25px; z-index: 100;
+    padding: 10px 20px; font-size: 14px; font-weight: 700;
+    background-color: white; border: 1px solid #ccc;
+    border-radius: 50px; cursor: pointer;
     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     transition: all 0.2s ease;
 }
-
 #btn-voltar:hover {
     background-color: #f1f1f1;
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
+.hidden { display: none !important; }
 
-.hidden {
-    display: none !important;
-}
-
-
-/* --- LÓGICA DE ZOOM E CLIQUE (AQUI ESTÁ A CORREÇÃO) --- */
-
-/* Quando o mapa está com zoom... */
-.mapa-zoom-ativo .regiao:not(.foco) {
-    /* ...todas as regiões que NÃO estão em foco DESAPARECEM. */
-    display: none;
-}
-
-.mapa-zoom-ativo .regiao.foco {
-    /* A região em foco em si não é mais clicável. */
-    cursor: default;
-    pointer-events: none;
-}
-
-/* Por padrão, os municípios não são clicáveis. */
-.bairro {
-    pointer-events: none;
-}
-
-/* APENAS quando o mapa está com zoom, os municípios DENTRO da região em foco se tornam clicáveis. */
-.mapa-zoom-ativo .regiao.foco .bairro {
-    pointer-events: auto;
-    cursor: pointer;
-}
+/* As classes de estado que o JS usa */
+.mapa-zoom-ativo .regiao.foco { cursor: default; }
+.mapa-zoom-ativo .bairro { cursor: pointer; }
