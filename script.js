@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- MONTAGEM DO BANCO DE DADOS COMPLETO ---
+    // --- BANCO DE DADOS DOS MUNICÍPIOS ---
     const dadosMunicipios = Object.assign({},
         typeof dados_regiao_1 !== 'undefined' ? dados_regiao_1 : {},
         typeof dados_regiao_2 !== 'undefined' ? dados_regiao_2 : {},
@@ -17,21 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
         typeof dados_regiao_capital !== 'undefined' ? dados_regiao_capital : {}
     );
     
-    console.log("Dados de todos os municípios carregados:", dadosMunicipios);
-
-    // --- SELEÇÃO DOS ELEMENTOS PRINCIPAIS ---
-    const mapaContainer = document.getElementById('mapa-container'); // O container DIV do mapa
-    const mapaObjeto = document.getElementById('mapa-objeto');     // A tag <object> que carrega o SVG
-    const painelInfo = document.getElementById('info-painel');      // O painel de informações
-    const btnVoltar = document.getElementById('btn-voltar');        // O botão de voltar
+    // --- SELEÇÃO DOS ELEMENTOS PRINCIPAIS DA PÁGINA ---
+    const mapaContainer = document.getElementById('mapa-container');
+    const mapaObjeto = document.getElementById('mapa-objeto');
+    const painelInfo = document.getElementById('info-painel');
+    const btnVoltar = document.getElementById('btn-voltar');
 
     // --- LÓGICA PRINCIPAL ---
     
-    // Espera o SVG ser completamente carregado dentro da tag <object>
     mapaObjeto.addEventListener('load', () => {
         
-        console.log("Mapa SVG carregado com sucesso!");
-
         const svgDoc = mapaObjeto.contentDocument;
         if (!svgDoc) {
             console.error("Erro: Não foi possível acessar o conteúdo do SVG.");
@@ -42,36 +37,47 @@ document.addEventListener('DOMContentLoaded', () => {
         const todasAsRegioes = svgDoc.querySelectorAll('.regiao');
         const todosOsBairros = svgDoc.querySelectorAll('.bairro');
         
-        console.log(`Encontradas ${todasAsRegioes.length} regiões e ${todosOsBairros.length} municípios.`);
-
         const viewBoxOriginal = svgMapa.getAttribute('viewBox');
         let elementoSelecionado = null;
 
         // --- FUNÇÕES AUXILIARES ---
 
-        const zoomNaRegiao = (regiaoElement) => {
-            const bbox = regiaoElement.getBBox();
+        const zoomNaRegiao = (regiaoClicada) => {
+            const bbox = regiaoClicada.getBBox();
             const padding = 20;
             const novoViewBox = `${bbox.x - padding} ${bbox.y - padding} ${bbox.width + (padding * 2)} ${bbox.height + (padding * 2)}`;
             
             svgMapa.setAttribute('viewBox', novoViewBox);
             
-            // A classe de zoom é adicionada ao CONTAINER, não ao objeto
+            // LÓGICA DE VISIBILIDADE FORÇADA VIA JAVASCRIPT
+            todasAsRegioes.forEach(regiao => {
+                if (regiao.id === regiaoClicada.id) {
+                    regiao.style.display = 'block';
+                    // ADICIONADO DE VOLTA: Marca a região com a classe .foco para o CSS saber qual é
+                    regiao.classList.add('foco');
+                } else {
+                    regiao.style.display = 'none';
+                }
+            });
+
+            // ADICIONADO DE VOLTA: Avisa o CSS que estamos em modo de zoom
             mapaContainer.classList.add('zoom-ativo');
-            regiaoElement.classList.add('foco');
             
             btnVoltar.classList.remove('hidden');
-            console.log(`Zoom na região: ${regiaoElement.id}`);
         };
 
         const resetarZoom = () => {
             svgMapa.setAttribute('viewBox', viewBoxOriginal);
-            mapaContainer.classList.remove('zoom-ativo');
             
-            const regiaoEmFoco = svgDoc.querySelector('.regiao.foco');
-            if (regiaoEmFoco) {
-                regiaoEmFoco.classList.remove('foco');
-            }
+            // Faz todas as regiões reaparecerem
+            todasAsRegioes.forEach(regiao => {
+                regiao.style.display = 'block';
+                // ADICIONADO DE VOLTA: Limpa a classe .foco
+                regiao.classList.remove('foco');
+});
+
+            // ADICIONADO DE VOLTA: Avisa o CSS que saímos do modo de zoom
+            mapaContainer.classList.remove('zoom-ativo');
 
             btnVoltar.classList.add('hidden');
             painelInfo.innerHTML = '<h2>Selecione uma Região</h2><p>Clique em uma área do mapa para começar a explorar.</p>';
@@ -80,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 elementoSelecionado.classList.remove('selecionado');
                 elementoSelecionado = null;
             }
-            console.log("Zoom resetado.");
         };
 
         const exibirInfoMunicipio = (municipioElement) => {
@@ -93,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             municipioElement.classList.add('selecionado');
             elementoSelecionado = municipioElement;
-            console.log(`Exibindo informações de: ${municipioId}`);
 
             if (dados) {
                 painelInfo.innerHTML = `
@@ -114,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         todasAsRegioes.forEach(regiao => {
             regiao.addEventListener('click', (event) => {
-                // CORREÇÃO: Usamos mapaContainer, que está acessível aqui.
+                // Esta verificação agora é redundante por causa da lógica de esconder, mas não prejudica.
                 if (mapaContainer.classList.contains('zoom-ativo')) return;
                 event.stopPropagation();
                 zoomNaRegiao(regiao);
@@ -123,16 +127,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         todosOsBairros.forEach(bairro => {
             bairro.addEventListener('click', (event) => {
-                 // CORREÇÃO: Usamos mapaContainer, que está acessível aqui.
-                if (!mapaContainer.classList.contains('zoom-ativo')) return;
+                // A interatividade agora é controlada pelo CSS 'pointer-events'
                 event.stopPropagation();
                 exibirInfoMunicipio(bairro);
             });
         });
         
         btnVoltar.addEventListener('click', resetarZoom);
-
-        console.log("Tudo pronto! O mapa está interativo.");
     });
 
     mapaObjeto.addEventListener('error', () => {

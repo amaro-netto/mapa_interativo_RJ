@@ -39,6 +39,7 @@ h1 {
     max-width: 900px; 
     min-width: 400px; 
     position: relative;
+    /* Trava a proporção do container para ele não mudar de tamanho com o zoom */
     aspect-ratio: 4 / 3;
 }
 
@@ -69,7 +70,7 @@ h1 {
     padding-bottom: 10px;
 }
 
-/* --- ESTILOS DE INTERATIVIDADE (VERSÃO FINAL) --- */
+/* --- ELEMENTOS DE INTERATIVIDADE --- */
 
 #btn-voltar {
     position: absolute;
@@ -79,6 +80,7 @@ h1 {
     padding: 10px 20px;
     font-size: 14px;
     font-weight: 700;
+    color: #333;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 50px;
@@ -93,25 +95,7 @@ h1 {
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
+/* Classe para esconder/mostrar o botão de voltar */
 .hidden {
     display: none !important;
-}
-
-/* QUANDO O ZOOM ESTÁ ATIVO... */
-.zoom-ativo .regiao:not(.foco) {
-    /* A MÁGICA ESTÁ AQUI: Esta regra remove completamente as outras regiões do mapa. */
-    display: none; 
-}
-
-.zoom-ativo .regiao.foco {
-    pointer-events: none;
-    cursor: default;
-}
-
-.bairro {
-    pointer-events: none;
-}
-
-.zoom-ativo .regiao.foco .bairro {
-    pointer-events: auto;
 }
