@@ -1,38 +1,14 @@
 <svg id="mapa-rio" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1071.39 709.6">
   <style>
-    .regiao {
-      cursor: pointer;
-      transition: opacity 0.3s ease;
-    }
-    .regiao:hover {
-      opacity: 0.7;
-    }
-    .bairro {
-      stroke: #FFF;
-      stroke-width: 0.5;
-      transition: fill 0.3s ease;
-    }
-    .bairro:hover {
-      fill: #FFD700 !important; /* Amarelo para destacar */
-      cursor: pointer;
-    }
-    .bairro.selecionado {
-       fill: #E44D26 !important; /* Laranja para o bairro selecionado */
-    }
-
-    /* Cores de cada região */
-    #regiao_12 { fill: #82bb26; }
-    #regiao_11 { fill: #a88aac; }
-    #regiao_10 { fill: #f2929e; }
-    #regiao_09 { fill: #c4d179; }
-    #regiao_08 { fill: #93d5f5; }
-    #regiao_07 { fill: #d1af6c; }
-    #regiao_06 { fill: #bc1f2b; }
-    #regiao_05 { fill: #5ca67b; }
-    #regiao_04 { fill: #29addd; }
-    #regiao_03 { fill: #a13a8e; }
-    #regiao_02 { fill: #fecc2c; }
-    #regiao_01 { fill: #f18637; }
+    .regiao { cursor: pointer; transition: opacity 0.3s ease; }
+    .regiao:hover { opacity: 0.7; }
+    .bairro { stroke: #FFF; stroke-width: 0.5; transition: fill 0.3s ease; }
+    .bairro:hover { fill: #FFD700 !important; cursor: pointer; }
+    .bairro.selecionado { fill: #E44D26 !important; }
+    #regiao_12 { fill: #82bb26; } #regiao_11 { fill: #a88aac; } #regiao_10 { fill: #f2929e; }
+    #regiao_09 { fill: #c4d179; } #regiao_08 { fill: #93d5f5; } #regiao_07 { fill: #d1af6c; }
+    #regiao_06 { fill: #bc1f2b; } #regiao_05 { fill: #5ca67b; } #regiao_04 { fill: #29addd; }
+    #regiao_03 { fill: #a13a8e; } #regiao_02 { fill: #fecc2c; } #regiao_01 { fill: #f18637; }
     #regiao_capital { fill: #7d806a; }
   </style>
 

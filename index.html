@@ -1,9 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Interativo do Estado do Rio de Janeiro</title>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <h1>Mapa Interativo do Estado do Rio de Janeiro</h1>
+    <p>Clique em uma região para dar zoom e explorar os municípios.</p>
+
+    <div class="container-principal">
+
+        <div id="mapa-container">
+            <button id="btn-voltar" class="hidden">Ver todas as regiões</button>
+            
+            <object id="mapa-objeto" data="mapa.svg" type="image/svg+xml"></object>
+        </div>
+        
+        <aside id="info-painel">
+            <h2>Selecione uma Região</h2>
+            <p>Clique em uma área do mapa para começar a explorar.</p>
+        </aside>
+
+    </div>
+
     <script src="data/regiao_1.js"></script>
     <script src="data/regiao_2.js"></script>
     <script src="data/regiao_3.js"></script>
@@ -17,6 +40,7 @@
     <script src="data/regiao_11.js"></script>
     <script src="data/regiao_12.js"></script>
     <script src="data/regiao_capital.js"></script>
+
     <script src="script.js"></script>
 
 </body>
