@@ -1,165 +1,146 @@
-// Espera o HTML principal da página ser carregado para começar a rodar o script.
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- BANCO DE DADOS (em formato de objeto JavaScript) ---
-    // Aqui guardamos as informações de cada bairro. 
-    // A chave (ex: "mage") deve ser EXATAMENTE IGUAL ao 'id' que você deu ao bairro no arquivo SVG.
-    const dadosBairros = {
+    // --- BANCO DE DADOS DOS MUNICÍPIOS ---
+    // A chave (ex: "mage") deve ser IGUAL ao 'id' do município no SVG.
+    // Para municípios com várias partes (ilhas), usamos o 'data-id'.
+    const dadosMunicipios = {
         // Região 01
-        japeri: {
-            nome: "Japeri",
-            descricao: "Japeri é um município da Baixada Fluminense, conhecido por sua estação de trem histórica e áreas de preservação ambiental."
-        },
-        duque_de_caxias: {
-            nome: "Duque de Caxias",
-            descricao: "Um dos mais populosos e economicamente importantes municípios da Baixada Fluminense, com uma grande refinaria de petróleo."
-        },
-        // Adicionei os outros que você nomeou para você ver funcionando!
-        nova_iguaçu: { nome: "Nova Iguaçu", descricao: "Descrição de Nova Iguaçu..." },
-        mesquita: { nome: "Mesquita", descricao: "Descrição de Mesquita..." },
-        nilopolis: { nome: "Nilópolis", descricao: "Descrição de Nilópolis..." },
-        sao_joao_de_meriti: { nome: "São João de Meriti", descricao: "Descrição de São João de Meriti..." },
-        belford_roxo: { nome: "Belford Roxo", descricao: "Descrição de Belford Roxo..." },
-        queimados: { nome: "Queimados", descricao: "Descrição de Queimados..." },
+        japeri: { nome: "Japeri", descricao: "Japeri é um município da Baixada Fluminense, conhecido por sua estação de trem histórica e áreas de preservação ambiental." },
+        duque_de_caxias: { nome: "Duque de Caxias", descricao: "Um dos mais populosos e economicamente importantes municípios da Baixada Fluminense, com uma grande refinaria de petróleo." },
+        nova_iguaçu: { nome: "Nova Iguaçu", descricao: "Conhecido por sua vasta área territorial e forte centro comercial." },
+        mesquita: { nome: "Mesquita", descricao: "Município da Baixada Fluminense, desmembrado de Nova Iguaçu." },
+        nilopolis: { nome: "Nilópolis", descricao: "Famoso por ser o berço da escola de samba Beija-Flor." },
+        sao_joao_de_meriti: { nome: "São João de Meriti", descricao: "Conhecido como o 'formigueiro das Américas' devido à sua alta densidade demográfica." },
+        belford_roxo: { nome: "Belford Roxo", descricao: "Município da Baixada Fluminense com uma rica história ligada à expansão ferroviária." },
+        queimados: { nome: "Queimados", descricao: "Cidade com crescente desenvolvimento industrial na Baixada Fluminense." },
 
         // Região 02
-        mage: {
-            nome: "Magé",
-            descricao: "Município histórico da Baixada Fluminense, com rica herança do período colonial e belezas naturais."
-        },
+        mage: { nome: "Magé", descricao: "Município histórico da Baixada Fluminense, com rica herança do período colonial e belezas naturais." },
         guapimirim: { nome: "Guapimirim", descricao: "Famoso por abrigar parte do Parque Nacional da Serra dos Órgãos, sendo um destino de ecoturismo." },
         itaborai: { nome: "Itaboraí", descricao: "Conhecido pelo Complexo Petroquímico do Rio de Janeiro (COMPERJ)." },
         tangua: { nome: "Tanguá", descricao: "Conhecido por suas plantações de laranja e por ser um município tranquilo da região metropolitana." },
-        
+
         // Região 03
-        rio_bonito: {
-            nome: "Rio Bonito",
-            descricao: "Município com forte vocação agropecuária e que serve como um importante entroncamento rodoviário."
-        },
+        rio_bonito: { nome: "Rio Bonito", descricao: "Município com forte vocação agropecuária e que serve como um importante entroncamento rodoviário." },
+        marica: { nome: "Maricá", descricao: "Conhecida por suas lagoas, praias e pela política de renda básica de cidadania." },
+        saquarema: { nome: "Saquarema", descricao: "Considerada a 'Capital Nacional do Surf', com praias famosas por suas ondas." },
+        silva_jardim: { nome: "Silva Jardim", descricao: "Lar da Reserva Biológica Poço das Antas, principal refúgio do mico-leão-dourado." },
+        casimiro_de_abreu: { nome: "Casimiro de Abreu", descricao: "Terra do poeta que lhe dá nome, famosa pelo turismo rural e de aventura." },
         
-        // Adicione aqui as informações para todos os outros bairros que você nomeou...
+        // Região 04
+        quatis: { nome: "Quatis", descricao: "Pequeno e acolhedor município no Vale do Paraíba Fluminense." },
+        itatiaia: { nome: "Itatiaia", descricao: "Sede do Parque Nacional do Itatiaia, o primeiro parque nacional do Brasil, famoso por suas montanhas e trilhas." },
+        resende: { nome: "Resende", descricao: "Importante polo industrial, militar (sede da AMAN) e universitário." },
+        rio_claro: { nome: "Rio Claro", descricao: "Conhecido por suas fazendas históricas do ciclo do café e belezas naturais." },
+        barra_mansa: { nome: "Barra Mansa", descricao: "Importante centro siderúrgico e ferroviário no sul do estado." },
+        pirai: { nome: "Piraí", descricao: "Cidade histórica do Vale do Café, conhecida também pela Represa de Ribeirão das Lajes." },
+        porto_real: { nome: "Porto Real", descricao: "Única colônia finlandesa no Brasil, com forte influência cultural e industrial." },
+        pinheiral: { nome: "Pinheiral", descricao: "Município com forte tradição na pecuária leiteira e agricultura." },
+        volta_redonda: { nome: "Volta Redonda", descricao: "Conhecida como a 'Cidade do Aço' por abrigar a Companhia Siderúrgica Nacional (CSN)." },
+        
+        // Região 09
+        seropedica: { nome: "Seropédica", descricao: "Município conhecido por abrigar a Universidade Federal Rural do Rio de Janeiro (UFRRJ)." },
+        itaguai: { nome: "Itaguaí", descricao: "Local de grande importância com o Porto de Itaguaí, um dos maiores do país." },
+        mangaratiba: { nome: "Mangaratiba", descricao: "Belo município da Costa Verde, com praias, ilhas e resorts." },
+        angra: { nome: "Angra dos Reis", descricao: "Famosa por suas 365 ilhas, incluindo a Ilha Grande, e usinas nucleares." },
+        paraty: { nome: "Paraty", descricao: "Cidade histórica colonial, Patrimônio Mundial da UNESCO, conhecida por sua arquitetura, cultura e natureza exuberante." },
+
+        // Adicione aqui as informações para todos os outros bairros que você nomear...
     };
 
-    // --- SELEÇÃO DOS ELEMENTOS PRINCIPAIS ---
     const mapaObjeto = document.getElementById('mapa-objeto');
     const painelInfo = document.getElementById('info-painel');
     const btnVoltar = document.getElementById('btn-voltar');
 
-    // --- LÓGICA DO MAPA ---
-
-    // O mapa é carregado de um arquivo externo (<object>), então precisamos esperar o evento 'load'
+    // Espera o SVG ser completamente carregado dentro da tag <object>
     mapaObjeto.addEventListener('load', () => {
-        
-        // Agora que o mapa carregou, podemos acessar seu conteúdo
         const svgDoc = mapaObjeto.contentDocument;
-        const svgMapa = svgDoc.getElementById('mapa-rio');
-        const todasAsRegioes = svgDoc.querySelectorAll('.regiao');
-
-        // Guarda o viewBox original para poder resetar o zoom
+        const svgMapa = svgDoc.documentElement;
+        
         const viewBoxOriginal = svgMapa.getAttribute('viewBox');
         let bairroSelecionadoAnteriormente = null;
 
-        // --- FUNÇÕES AUXILIARES ---
+        const todasAsRegioes = svgDoc.querySelectorAll('.regiao');
+        const todosOsBairros = svgDoc.querySelectorAll('.bairro');
 
         // Função para dar zoom em uma região
         const zoomNaRegiao = (regiaoElement) => {
-            // Pega as dimensões e a posição do grupo da região
             const bbox = regiaoElement.getBBox();
-
-            // Adiciona uma margem (padding) para a região não ficar colada nas bordas
             const padding = 20;
             const novoViewBox = `${bbox.x - padding} ${bbox.y - padding} ${bbox.width + (padding * 2)} ${bbox.height + (padding * 2)}`;
             
-            // Aplica o novo viewBox ao SVG, criando o efeito de zoom
             svgMapa.setAttribute('viewBox', novoViewBox);
-            
-            // Adiciona classes para o CSS controlar a visibilidade e os cliques
-            mapaObjeto.classList.add('zoom-ativo');
+            mapaContainer.classList.add('zoom-ativo');
             regiaoElement.classList.add('foco');
-            
-            // Mostra o botão de voltar
             btnVoltar.classList.remove('hidden');
         };
 
-        // Função para resetar o zoom e voltar à visão geral
+        // Função para resetar o zoom
         const resetarZoom = () => {
             svgMapa.setAttribute('viewBox', viewBoxOriginal);
-            mapaObjeto.classList.remove('zoom-ativo');
+            mapaContainer.classList.remove('zoom-ativo');
             
-            // Limpa a classe 'foco' de qualquer região que a tenha
             const regiaoEmFoco = svgDoc.querySelector('.regiao.foco');
             if (regiaoEmFoco) {
                 regiaoEmFoco.classList.remove('foco');
             }
 
-            // Esconde o botão de voltar
             btnVoltar.classList.add('hidden');
-
-            // Reseta o painel de informações
             painelInfo.innerHTML = '<h2>Selecione uma Região</h2><p>Clique em uma área do mapa para começar a explorar.</p>';
-
-            // Remove a seleção de qualquer bairro
+            
             if (bairroSelecionadoAnteriormente) {
                 bairroSelecionadoAnteriormente.classList.remove('selecionado');
                 bairroSelecionadoAnteriormente = null;
             }
         };
 
-        // Função para exibir as informações de um bairro clicado
-        const exibirInfoBairro = (bairroElement) => {
-            const bairroId = bairroElement.id;
-            const dados = dadosBairros[bairroId];
+        // Função para exibir as informações de um município
+        const exibirInfoMunicipio = (municipioElement) => {
+            // Lógica inteligente: usa o 'data-id' para grupos de ilhas, ou o 'id' normal
+            const municipioId = municipioElement.dataset.id || municipioElement.id;
+            const dados = dadosMunicipios[municipioId];
 
-            // Remove a seleção do bairro anterior
             if (bairroSelecionadoAnteriormente) {
                 bairroSelecionadoAnteriormente.classList.remove('selecionado');
             }
-
-            // Adiciona a classe de seleção ao bairro atual e o armazena
-            bairroElement.classList.add('selecionado');
-            bairroSelecionadoAnteriormente = bairroElement;
+            municipioElement.classList.add('selecionado');
+            bairroSelecionadoAnteriormente = municipioElement;
 
             if (dados) {
                 painelInfo.innerHTML = `
                     <h2>${dados.nome}</h2>
                     <p>${dados.descricao || "Nenhuma descrição disponível."}</p>
-                    `;
+                `;
             } else {
                 painelInfo.innerHTML = `
-                    <h2>${bairroId.replace(/_/g, " ")}</h2>
-                    <p>Informações não disponíveis para este município.</p>
+                    <h2>${municipioId.replace(/_/g, " ")}</h2>
+                    <p>Dados para este município ainda não cadastrados.</p>
                 `;
             }
         };
 
-
         // --- EVENTOS DE CLIQUE ---
 
-        // 1. Adiciona um listener de clique para CADA REGIÃO
+        // 1. Adiciona listener de clique para CADA REGIÃO
         todasAsRegioes.forEach(regiao => {
             regiao.addEventListener('click', (event) => {
-                // Se já estivermos com zoom, não faz nada (o CSS já ajuda com isso)
-                if (mapaObjeto.classList.contains('zoom-ativo')) return;
-
-                // Para o clique de se propagar para o mapa e chamar outros eventos
+                if (mapaContainer.classList.contains('zoom-ativo')) return;
                 event.stopPropagation();
-                
                 zoomNaRegiao(regiao);
-            });
-
-            // Adiciona um listener para cada bairro DENTRO da região
-            const bairrosDaRegiao = regiao.querySelectorAll('.bairro');
-            bairrosDaRegiao.forEach(bairro => {
-                bairro.addEventListener('click', (event) => {
-                    // Para o clique de se propagar para a região
-                    event.stopPropagation();
-                    exibirInfoBairro(bairro);
-                });
             });
         });
 
-        // 2. Adiciona o listener para o botão de voltar
+        // 2. Adiciona listener de clique para CADA BAIRRO/MUNICÍPIO
+        todosOsBairros.forEach(bairro => {
+            bairro.addEventListener('click', (event) => {
+                // Só funciona se o zoom estiver ativo
+                if (!mapaContainer.classList.contains('zoom-ativo')) return;
+                event.stopPropagation();
+                exibirInfoMunicipio(bairro);
+            });
+        });
+        
+        // 3. Adiciona listener para o botão de voltar
         btnVoltar.addEventListener('click', resetarZoom);
-
     });
 });
