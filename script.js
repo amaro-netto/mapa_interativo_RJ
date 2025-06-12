@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Junta todos os objetos de dados dos seus arquivos da pasta /data
     const dadosMunicipios = Object.assign({},
         typeof dados_regiao_1 !== 'undefined' ? dados_regiao_1 : {},
         typeof dados_regiao_2 !== 'undefined' ? dados_regiao_2 : {},
@@ -16,105 +17,80 @@ document.addEventListener('DOMContentLoaded', () => {
         typeof dados_regiao_capital !== 'undefined' ? dados_regiao_capital : {}
     );
     
-    const mapaContainer = document.getElementById('mapa-container');
+    // Seleção dos elementos da página
     const mapaObjeto = document.getElementById('mapa-objeto');
     const painelInfo = document.getElementById('info-painel');
     const btnVoltar = document.getElementById('btn-voltar');
 
+    let elementoSelecionado = null;
+    let eventosAtivos = null; // Controla os eventos de clique dos municípios
+
+    // Função para carregar o mapa de uma região específica
+    const carregarMapaRegiao = (regiaoId) => {
+        if (!regiaoId) return;
+        mapaObjeto.data = `svgs/${regiaoId}.svg`;
+        btnVoltar.classList.remove('hidden');
+    };
+
+    // Função para voltar ao mapa geral
+    const resetarParaMapaGeral = () => {
+        mapaObjeto.data = 'svgs/mapa-geral.svg';
+        btnVoltar.classList.add('hidden');
+        painelInfo.innerHTML = '<h2>Selecione uma Região</h2><p>Clique em uma área do mapa para começar a explorar.</p>';
+        if (elementoSelecionado) {
+            elementoSelecionado.classList.remove('selecionado');
+            elementoSelecionado = null;
+        }
+    };
+
+    // Função para exibir informações do município
+    const exibirInfoMunicipio = (municipioElement) => {
+        const municipioId = municipioElement.dataset.id || municipioElement.id;
+        const dados = dadosMunicipios[municipioId];
+
+        if (elementoSelecionado) elementoSelecionado.classList.remove('selecionado');
+        municipioElement.classList.add('selecionado');
+        elementoSelecionado = municipioElement;
+
+        if (dados) {
+            painelInfo.innerHTML = `<h2>${dados.nome}</h2><p>${dados.descricao || "Nenhuma descrição disponível."}</p>`;
+        } else {
+            let nomeFormatado = municipioId.replace(/[-_]/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+            painelInfo.innerHTML = `<h2>${nomeFormatado}</h2><p>Dados para este município ainda não cadastrados.</p>`;
+        }
+    };
+
+    // Evento principal: roda toda vez que um novo SVG é carregado no <object>
     mapaObjeto.addEventListener('load', () => {
-        
         const svgDoc = mapaObjeto.contentDocument;
-        if (!svgDoc) { return; }
+        if (!svgDoc) return;
 
-        const svgMapa = svgDoc.documentElement;
-        const todasAsRegioes = svgDoc.querySelectorAll('.regiao');
-        
-        const viewBoxOriginal = svgMapa.getAttribute('viewBox');
-        let elementoSelecionado = null;
-        let controladorDeEventos = null; // Guarda o nosso "controle remoto" de eventos
+        // Se eventos de clique antigos existirem (de um mapa de região anterior), eles são removidos.
+        if (eventosAtivos) eventosAtivos.abort();
+        eventosAtivos = new AbortController();
 
-        // Função para exibir as informações de um município
-        const exibirInfoMunicipio = (municipioElement) => {
-            const municipioId = municipioElement.dataset.id || municipioElement.id;
-            const dados = dadosMunicipios[municipioId];
+        // Procura por regiões ou municípios no SVG que acabou de carregar
+        const regioesNoMapa = svgDoc.querySelectorAll('.regiao');
+        const municipiosNoMapa = svgDoc.querySelectorAll('.bairro');
 
-            if (elementoSelecionado) {
-                elementoSelecionado.classList.remove('selecionado');
-            }
-            municipioElement.classList.add('selecionado');
-            elementoSelecionado = municipioElement;
+        // Se encontrou regiões, significa que estamos no mapa geral.
+        if (regioesNoMapa.length > 0) {
+            regioesNoMapa.forEach(regiao => {
+                regiao.addEventListener('click', () => carregarMapaRegiao(regiao.id));
+            });
+        }
 
-            if (dados) {
-                painelInfo.innerHTML = `<h2>${dados.nome}</h2><p>${dados.descricao || "Nenhuma descrição disponível."}</p>`;
-            } else {
-                let nomeFormatado = municipioId.replace(/[-_]/g, " ").replace(/\b\w/g, l => l.toUpperCase());
-                painelInfo.innerHTML = `<h2>${nomeFormatado}</h2><p>Dados para este município ainda não cadastrados.</p>`;
-            }
-        };
-
-        const zoomNaRegiao = (regiaoClicada) => {
-            const bbox = regiaoClicada.getBBox();
-            const padding = 20;
-            const novoViewBox = `${bbox.x - padding} ${bbox.y - padding} ${bbox.width + (padding * 2)} ${bbox.height + (padding * 2)}`;
-            
-            svgMapa.setAttribute('viewBox', novoViewBox);
-            
-            // ================== NOVA LÓGICA DE EVENTOS ==================
-            
-            // 1. Se já existirem eventos de clique antigos, remove todos eles.
-            if (controladorDeEventos) {
-                controladorDeEventos.abort();
-            }
-            // 2. Cria um novo "controle remoto" para os novos eventos.
-            controladorDeEventos = new AbortController();
-
-            // 3. Adiciona eventos de clique APENAS nos municípios da região em foco.
-            const bairrosDaRegiao = regiaoClicada.querySelectorAll('.bairro');
-            bairrosDaRegiao.forEach(bairro => {
-                bairro.addEventListener('click', (event) => {
-                    event.stopPropagation();
+        // Se encontrou municípios, significa que estamos em um mapa de região.
+        if (municipiosNoMapa.length > 0) {
+            municipiosNoMapa.forEach(bairro => {
+                bairro.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     exibirInfoMunicipio(bairro);
-                }, { signal: controladorDeEventos.signal }); // Conecta o evento ao nosso controle.
+                }, { signal: eventosAtivos.signal }); // Adiciona um evento que pode ser "abortado"
             });
-            
-            mapaContainer.classList.add('mapa-zoom-ativo');
-            todasAsRegioes.forEach(r => r.classList.remove('foco')); // Limpa o foco antigo
-            regiaoClicada.classList.add('foco'); // Adiciona foco na nova região
-            btnVoltar.classList.remove('hidden');
-        };
-
-        const resetarZoom = () => {
-            svgMapa.setAttribute('viewBox', viewBoxOriginal);
-            mapaContainer.classList.remove('mapa-zoom-ativo');
-            
-            const regiaoEmFoco = svgDoc.querySelector('.regiao.foco');
-            if (regiaoEmFoco) {
-                regiaoEmFoco.classList.remove('foco');
-            }
-            
-            // ================== NOVA LÓGICA DE EVENTOS ==================
-            // 4. Ao voltar, remove todos os eventos de clique dos municípios que estavam ativos.
-            if (controladorDeEventos) {
-                controladorDeEventos.abort();
-                controladorDeEventos = null;
-            }
-
-            btnVoltar.classList.add('hidden');
-            painelInfo.innerHTML = '<h2>Selecione uma Região</h2><p>Clique em uma área do mapa para começar a explorar.</p>';
-            
-            if (elementoSelecionado) {
-                elementoSelecionado.classList.remove('selecionado');
-                elementoSelecionado = null;
-            }
-        };
-
-        // --- EVENTOS DE CLIQUE INICIAIS ---
-        todasAsRegioes.forEach(regiao => {
-            regiao.addEventListener('click', () => {
-                zoomNaRegiao(regiao);
-            });
-        });
-        
-        btnVoltar.addEventListener('click', resetarZoom);
+        }
     });
+    
+    // Evento do botão de voltar
+    btnVoltar.addEventListener('click', resetarParaMapaGeral);
 });
