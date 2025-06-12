@@ -5,10 +5,12 @@
     .bairro { stroke: #FFF; stroke-width: 0.5; transition: fill 0.3s ease; }
     .bairro:hover { fill: #FFD700 !important; cursor: pointer; }
     .bairro.selecionado { fill: #E44D26 !important; }
-    #regiao_12 { fill: #82bb26; } #regiao_11 { fill: #a88aac; } #regiao_10 { fill: #f2929e; }
-    #regiao_09 { fill: #c4d179; } #regiao_08 { fill: #93d5f5; } #regiao_07 { fill: #d1af6c; }
-    #regiao_06 { fill: #bc1f2b; } #regiao_05 { fill: #5ca67b; } #regiao_04 { fill: #29addd; }
-    #regiao_03 { fill: #a13a8e; } #regiao_02 { fill: #fecc2c; } #regiao_01 { fill: #f18637; }
+
+    /* Cores de cada região */
+    #regiao_01 { fill: #f18637; } #regiao_02 { fill: #fecc2c; } #regiao_03 { fill: #a13a8e; }
+    #regiao_04 { fill: #29addd; } #regiao_05 { fill: #5ca67b; } #regiao_06 { fill: #bc1f2b; }
+    #regiao_07 { fill: #d1af6c; } #regiao_08 { fill: #93d5f5; } #regiao_09 { fill: #c4d179; }
+    #regiao_10 { fill: #f2929e; } #regiao_11 { fill: #a88aac; } #regiao_12 { fill: #82bb26; }
     #regiao_capital { fill: #7d806a; }
   </style>
 
