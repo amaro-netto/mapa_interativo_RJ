@@ -1,79 +1,127 @@
-/* Importa uma fonte do Google Fonts para deixar o site mais estiloso */
+/* --- GERAL E FONTES --- */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-/* --- Configurações Globais --- */
-body {
-    font-family: 'Roboto', sans-serif; /* Define a fonte padrão */
-    background-color: #f4f7f6; /* Um cinza bem claro para o fundo */
-    color: #333; /* Cor do texto principal */
-    margin: 20px; /* Adiciona uma margem em volta do corpo da página */
-    text-align: center; /* Centraliza o texto do h1 e p */
+* {
+    box-sizing: border-box;
 }
 
-/* --- Layout Principal --- */
-.container-principal {
-    display: flex; /* ATIVA O FLEXBOX: modo de layout moderno e poderoso */
-    flex-wrap: wrap; /* Permite que os itens quebrem para a linha de baixo em telas pequenas */
-    gap: 20px; /* Espaço entre o mapa e o painel de informações */
-    justify-content: center; /* Centraliza os itens no container */
-    margin-top: 30px;
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f2f5; /* Fundo neutro e suave */
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    text-align: center;
 }
+
+/* --- LAYOUT PRINCIPAL --- */
+h1 {
+    color: #2c3e50;
+    font-weight: 700;
+}
+
+.container-principal {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 30px; 
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 20px;
+    max-width: 1600px; /* Limita a largura máxima para telas grandes */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- MAPA E PAINEL DE INFORMAÇÕES --- */
 
 #mapa-container {
-    flex-basis: 600px; /* Define uma largura base para o container do mapa */
-    max-width: 100%; /* Garante que o mapa não fique maior que a tela */
+    flex: 3; /* Faz o mapa ocupar mais espaço */
+    min-width: 400px; 
+    position: relative; /* Necessário para posicionar o botão "Voltar" */
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    padding: 15px;
+    overflow: hidden; /* Garante que nada saia dos cantos arredondados */
+}
+
+/* A tag <object> que carrega nosso mapa */
+#mapa-objeto {
+    width: 100%;
+    height: 100%;
+    display: block;
 }
 
 #info-painel {
-    flex-basis: 350px; /* Define uma largura base para o painel de informações */
-    background-color: #ffffff; /* Fundo branco para o painel */
-    border: 1px solid #ddd; /* Borda sutil */
-    border-radius: 8px; /* Bordas arredondadas */
-    padding: 25px; /* Espaçamento interno */
-    text-align: left; /* Alinha o texto do painel à esquerda */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05); /* Sombra suave para dar profundidade */
+    flex: 1; /* Faz o painel ocupar menos espaço */
+    min-width: 340px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    text-align: left;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    height: fit-content; 
 }
 
-/* --- Estilos do Mapa SVG --- */
-#mapa-rio {
-    width: 100%; /* Faz o SVG ocupar todo o espaço do seu container */
-    height: auto; /* Mantém a proporção do mapa */
-}
-
-/* Estilo padrão para TODOS os bairros (usando a classe .bairro) */
-.bairro {
-    fill: #b0c4de; /* Cor de preenchimento (azul aço claro) */
-    stroke: #ffffff; /* Cor da borda (branca) */
-    stroke-width: 2; /* Largura da borda */
-    transition: fill 0.2s ease-in-out; /* Animação SUAVE da cor ao passar o mouse */
-}
-
-/* Efeito ao passar o mouse sobre um bairro */
-.bairro:hover {
-    fill: #ffc107; /* Muda a cor para um amarelo vibrante */
-    cursor: pointer; /* Muda o cursor do mouse para a "mãozinha" */
-}
-
-/* Estilo para o bairro que está ATUALMENTE SELECIONADO */
-.bairro.selecionado {
-    fill: #28a745; /* Cor verde para indicar seleção */
-}
-
-/* --- Estilos do Painel de Informações --- */
 #info-painel h2 {
     margin-top: 0;
-    color: #0056b3; /* Cor azul escura para o título do bairro */
+    color: #34495e;
+    border-bottom: 2px solid #f0f2f5;
+    padding-bottom: 10px;
 }
 
-/* Estilo para os pontos de interesse que serão criados pelo JavaScript */
-.ponto-interesse {
-    background-color: #e9ecef;
-    padding: 10px;
-    margin-top: 15px;
-    border-radius: 5px;
-    border-left: 4px solid #0056b3;
+/* --- ESTILOS DE INTERATIVIDADE (CONTROLADOS PELO JAVASCRIPT) --- */
+
+/* Botão de voltar */
+#btn-voltar {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    z-index: 100;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: all 0.2s ease;
 }
 
-.ponto-interesse h4 {
-    margin: 0 0 5px 0;
+#btn-voltar:hover {
+    background-color: #f1f1f1;
+    transform: translateY(-2px); /* Efeito de elevação */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Classe para esconder/mostrar elementos */
+.hidden {
+    display: none !important;
+}
+
+/* Estas classes serão adicionadas pelo JavaScript para controlar o zoom:
+  - .zoom-ativo: quando o zoom em uma região está ativo.
+  - .foco: na região específica que recebeu o zoom.
+*/
+
+.zoom-ativo .regiao:not(.foco) {
+    /* Esconde as outras regiões que não estão em foco */
+    display: none;
+}
+.zoom-ativo .regiao.foco {
+    /* Impede que a região em foco seja clicada novamente para dar zoom */
+    pointer-events: none;
+    cursor: default;
+}
+
+/* Por padrão, os bairros não são clicáveis (só as regiões) */
+.bairro {
+    pointer-events: none;
+}
+
+/* Mas quando o zoom está ativo, os bairros da região em foco se tornam clicáveis */
+.zoom-ativo .regiao.foco .bairro {
+    pointer-events: auto; /* Permite o clique nos bairros */
 }

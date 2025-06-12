@@ -1,106 +1,165 @@
-// Espera o HTML ser completamente carregado antes de executar qualquer código.
-// Isso evita erros de tentar manipular elementos que ainda não existem.
+// Espera o HTML principal da página ser carregado para começar a rodar o script.
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- ARMAZENAMENTO DE DADOS ---
-    // Em um projeto real, isso poderia vir de um banco de dados ou uma API.
-    // Aqui, usamos um objeto JavaScript para guardar as informações de cada bairro.
-    // A chave do objeto (ex: "copacabana") DEVE ser a mesma do 'id' no SVG.
+    // --- BANCO DE DADOS (em formato de objeto JavaScript) ---
+    // Aqui guardamos as informações de cada bairro. 
+    // A chave (ex: "mage") deve ser EXATAMENTE IGUAL ao 'id' que você deu ao bairro no arquivo SVG.
     const dadosBairros = {
-        copacabana: {
-            nome: "Copacabana",
-            descricao: "Famosa por sua praia em forma de meia-lua, Copacabana é um dos bairros mais vibrantes do Rio, conhecido mundialmente.",
-            area: "4.1 km²",
-            pontos: [
-                { nome: "Sede Principal", endereco: "Av. Atlântica, 1702" },
-                { nome: "Filial Praia", endereco: "Rua Figueiredo de Magalhães, 55" }
-            ]
+        // Região 01
+        japeri: {
+            nome: "Japeri",
+            descricao: "Japeri é um município da Baixada Fluminense, conhecido por sua estação de trem histórica e áreas de preservação ambiental."
         },
-        tijuca: {
-            nome: "Tijuca",
-            descricao: "Um bairro tradicional da Zona Norte, lar do Parque Nacional da Tijuca, uma das maiores florestas urbanas do mundo.",
-            area: "10.1 km²",
-            pontos: [
-                { nome: "Centro de Operações", endereco: "Rua Conde de Bonfim, 300" }
-            ]
+        duque_de_caxias: {
+            nome: "Duque de Caxias",
+            descricao: "Um dos mais populosos e economicamente importantes municípios da Baixada Fluminense, com uma grande refinaria de petróleo."
         },
-        'barra-da-tijuca': { // IDs com hífen precisam estar entre aspas
-            nome: "Barra da Tijuca",
-            descricao: "Conhecida por suas longas praias, shoppings de luxo e condomínios. É um dos bairros que mais crescem na cidade.",
-            area: "49.3 km²",
-            pontos: [] // Este bairro não tem pontos de interesse no nosso exemplo
+        // Adicionei os outros que você nomeou para você ver funcionando!
+        nova_iguaçu: { nome: "Nova Iguaçu", descricao: "Descrição de Nova Iguaçu..." },
+        mesquita: { nome: "Mesquita", descricao: "Descrição de Mesquita..." },
+        nilopolis: { nome: "Nilópolis", descricao: "Descrição de Nilópolis..." },
+        sao_joao_de_meriti: { nome: "São João de Meriti", descricao: "Descrição de São João de Meriti..." },
+        belford_roxo: { nome: "Belford Roxo", descricao: "Descrição de Belford Roxo..." },
+        queimados: { nome: "Queimados", descricao: "Descrição de Queimados..." },
+
+        // Região 02
+        mage: {
+            nome: "Magé",
+            descricao: "Município histórico da Baixada Fluminense, com rica herança do período colonial e belezas naturais."
         },
-        centro: {
-            nome: "Centro",
-            descricao: "O coração histórico e financeiro do Rio, com uma rica arquitetura e grande importância cultural.",
-            area: "5.7 km²",
-            pontos: [
-                { nome: "Edifício Histórico", endereco: "Praça XV de Novembro, 1" },
-                { nome: "Escritório Central", endereco: "Av. Rio Branco, 156" }
-            ]
-        }
+        guapimirim: { nome: "Guapimirim", descricao: "Famoso por abrigar parte do Parque Nacional da Serra dos Órgãos, sendo um destino de ecoturismo." },
+        itaborai: { nome: "Itaboraí", descricao: "Conhecido pelo Complexo Petroquímico do Rio de Janeiro (COMPERJ)." },
+        tangua: { nome: "Tanguá", descricao: "Conhecido por suas plantações de laranja e por ser um município tranquilo da região metropolitana." },
+        
+        // Região 03
+        rio_bonito: {
+            nome: "Rio Bonito",
+            descricao: "Município com forte vocação agropecuária e que serve como um importante entroncamento rodoviário."
+        },
+        
+        // Adicione aqui as informações para todos os outros bairros que você nomeou...
     };
 
-    // --- SELEÇÃO DE ELEMENTOS DO HTML ---
-    // Guardamos os elementos que vamos manipular em constantes para fácil acesso.
-    const todosOsBairros = document.querySelectorAll('.bairro'); // Pega TODOS os elementos com a classe .bairro
-    const painelInfo = document.getElementById('info-painel'); // Pega o painel de informações
-    let bairroSelecionadoAnteriormente = null; // Variável para guardar quem foi o último clicado
+    // --- SELEÇÃO DOS ELEMENTOS PRINCIPAIS ---
+    const mapaObjeto = document.getElementById('mapa-objeto');
+    const painelInfo = document.getElementById('info-painel');
+    const btnVoltar = document.getElementById('btn-voltar');
 
-    // --- FUNÇÃO PRINCIPAL PARA ATUALIZAR O PAINEL ---
-    function exibirInfoBairro(bairroId) {
-        // Busca os dados do bairro clicado no nosso objeto 'dadosBairros'
-        const dados = dadosBairros[bairroId];
+    // --- LÓGICA DO MAPA ---
 
-        // Se não encontrar dados para o ID, mostra uma mensagem padrão.
-        if (!dados) {
-            painelInfo.innerHTML = '<h2>Informações não disponíveis.</h2>';
-            return; // Encerra a função aqui
-        }
+    // O mapa é carregado de um arquivo externo (<object>), então precisamos esperar o evento 'load'
+    mapaObjeto.addEventListener('load', () => {
+        
+        // Agora que o mapa carregou, podemos acessar seu conteúdo
+        const svgDoc = mapaObjeto.contentDocument;
+        const svgMapa = svgDoc.getElementById('mapa-rio');
+        const todasAsRegioes = svgDoc.querySelectorAll('.regiao');
 
-        // Monta o HTML dos pontos de interesse
-        let pontosHtml = '';
-        if (dados.pontos.length > 0) {
-            pontosHtml = '<h4>Sedes e Prédios:</h4>';
-            dados.pontos.forEach(ponto => {
-                pontosHtml += `
-                    <div class="ponto-interesse">
-                        <strong>${ponto.nome}</strong><br>
-                        <span>${ponto.endereco}</span>
-                    </div>
-                `;
-            });
-        } else {
-            pontosHtml = '<p>Não há sedes ou prédios registrados neste bairro.</p>';
-        }
+        // Guarda o viewBox original para poder resetar o zoom
+        const viewBoxOriginal = svgMapa.getAttribute('viewBox');
+        let bairroSelecionadoAnteriormente = null;
 
-        // Atualiza o conteúdo do painel com as informações do bairro
-        painelInfo.innerHTML = `
-            <h2>${dados.nome}</h2>
-            <p>${dados.descricao}</p>
-            <strong>Área:</strong> ${dados.area}
-            <hr>
-            ${pontosHtml}
-        `;
-    }
+        // --- FUNÇÕES AUXILIARES ---
 
-    // --- ADICIONANDO OS "OUVINTES DE EVENTO" (EVENT LISTENERS) ---
-    // Passamos por cada bairro do mapa e dizemos o que fazer quando ele for clicado.
-    todosOsBairros.forEach(bairro => {
-        bairro.addEventListener('click', () => {
-            // Remove a classe 'selecionado' do bairro que estava selecionado antes (se houver)
+        // Função para dar zoom em uma região
+        const zoomNaRegiao = (regiaoElement) => {
+            // Pega as dimensões e a posição do grupo da região
+            const bbox = regiaoElement.getBBox();
+
+            // Adiciona uma margem (padding) para a região não ficar colada nas bordas
+            const padding = 20;
+            const novoViewBox = `${bbox.x - padding} ${bbox.y - padding} ${bbox.width + (padding * 2)} ${bbox.height + (padding * 2)}`;
+            
+            // Aplica o novo viewBox ao SVG, criando o efeito de zoom
+            svgMapa.setAttribute('viewBox', novoViewBox);
+            
+            // Adiciona classes para o CSS controlar a visibilidade e os cliques
+            mapaObjeto.classList.add('zoom-ativo');
+            regiaoElement.classList.add('foco');
+            
+            // Mostra o botão de voltar
+            btnVoltar.classList.remove('hidden');
+        };
+
+        // Função para resetar o zoom e voltar à visão geral
+        const resetarZoom = () => {
+            svgMapa.setAttribute('viewBox', viewBoxOriginal);
+            mapaObjeto.classList.remove('zoom-ativo');
+            
+            // Limpa a classe 'foco' de qualquer região que a tenha
+            const regiaoEmFoco = svgDoc.querySelector('.regiao.foco');
+            if (regiaoEmFoco) {
+                regiaoEmFoco.classList.remove('foco');
+            }
+
+            // Esconde o botão de voltar
+            btnVoltar.classList.add('hidden');
+
+            // Reseta o painel de informações
+            painelInfo.innerHTML = '<h2>Selecione uma Região</h2><p>Clique em uma área do mapa para começar a explorar.</p>';
+
+            // Remove a seleção de qualquer bairro
+            if (bairroSelecionadoAnteriormente) {
+                bairroSelecionadoAnteriormente.classList.remove('selecionado');
+                bairroSelecionadoAnteriormente = null;
+            }
+        };
+
+        // Função para exibir as informações de um bairro clicado
+        const exibirInfoBairro = (bairroElement) => {
+            const bairroId = bairroElement.id;
+            const dados = dadosBairros[bairroId];
+
+            // Remove a seleção do bairro anterior
             if (bairroSelecionadoAnteriormente) {
                 bairroSelecionadoAnteriormente.classList.remove('selecionado');
             }
-            
-            // Adiciona a classe 'selecionado' ao bairro que acabou de ser clicado
-            bairro.classList.add('selecionado');
-            
-            // Atualiza a nossa variável de controle
-            bairroSelecionadoAnteriormente = bairro;
 
-            // Chama a função para exibir as informações, passando o ID do bairro clicado
-            exibirInfoBairro(bairro.id);
+            // Adiciona a classe de seleção ao bairro atual e o armazena
+            bairroElement.classList.add('selecionado');
+            bairroSelecionadoAnteriormente = bairroElement;
+
+            if (dados) {
+                painelInfo.innerHTML = `
+                    <h2>${dados.nome}</h2>
+                    <p>${dados.descricao || "Nenhuma descrição disponível."}</p>
+                    `;
+            } else {
+                painelInfo.innerHTML = `
+                    <h2>${bairroId.replace(/_/g, " ")}</h2>
+                    <p>Informações não disponíveis para este município.</p>
+                `;
+            }
+        };
+
+
+        // --- EVENTOS DE CLIQUE ---
+
+        // 1. Adiciona um listener de clique para CADA REGIÃO
+        todasAsRegioes.forEach(regiao => {
+            regiao.addEventListener('click', (event) => {
+                // Se já estivermos com zoom, não faz nada (o CSS já ajuda com isso)
+                if (mapaObjeto.classList.contains('zoom-ativo')) return;
+
+                // Para o clique de se propagar para o mapa e chamar outros eventos
+                event.stopPropagation();
+                
+                zoomNaRegiao(regiao);
+            });
+
+            // Adiciona um listener para cada bairro DENTRO da região
+            const bairrosDaRegiao = regiao.querySelectorAll('.bairro');
+            bairrosDaRegiao.forEach(bairro => {
+                bairro.addEventListener('click', (event) => {
+                    // Para o clique de se propagar para a região
+                    event.stopPropagation();
+                    exibirInfoBairro(bairro);
+                });
+            });
         });
+
+        // 2. Adiciona o listener para o botão de voltar
+        btnVoltar.addEventListener('click', resetarZoom);
+
     });
 });
