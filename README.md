@@ -48,12 +48,17 @@ https://github.com/user-attachments/assets/94cb1a0e-580d-4684-aa37-83bc5ea23a72
 |-- index.html              (A estrutura principal da página)
 |-- style.css               (O estilo da página)
 |-- script.js               (A lógica de interatividade e zoom)
-|-- mapa.svg                (O arquivo com o desenho do mapa)
 |
 +-- /data/                  (Pasta para os dados de cada região)
-    |-- regiao_1.js
-    |-- regiao_2.js
-    |-- ... (e assim por diante)
+|   |-- regiao_1.js
+|   |-- regiao_2.js
+|   |-- ... (e assim por diante)
+|
++-- /svgs/                  (Pasta para os mapas)
+|   |-- mapa-geral.svg
+|   |-- regiao_01.svg
+|   |-- ... (e assim por diante)
+|
 
 ```
 ## Estrutura para organizar o SVG dentro do VSCODE:
