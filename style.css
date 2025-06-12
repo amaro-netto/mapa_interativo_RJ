@@ -97,3 +97,44 @@ h1 {
 .hidden {
     display: none !important;
 }
+
+/* --- ESTILOS DO WIDGET DE CLIMA --- */
+
+#weather-widget {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #e7eaf3;
+}
+
+#weather-widget h4 {
+    margin: 0 0 10px 0;
+    color: #34495e;
+    font-size: 1em;
+}
+
+.clima-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #f0f2f5;
+    border-radius: 8px;
+    padding: 5px 10px;
+}
+
+.clima-info img {
+    width: 50px;
+    height: 50px;
+}
+
+.clima-info .temperatura {
+    font-size: 1.8em;
+    font-weight: 700;
+    margin: 0;
+    color: #2c3e50;
+}
+
+.clima-info .descricao {
+    margin: 0;
+    font-size: 0.9em;
+    color: #555;
+}

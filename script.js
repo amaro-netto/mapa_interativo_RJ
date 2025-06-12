@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Junta todos os objetos de dados dos seus arquivos da pasta /data
     const dadosMunicipios = Object.assign({},
         typeof dados_regiao_1 !== 'undefined' ? dados_regiao_1 : {},
         typeof dados_regiao_2 !== 'undefined' ? dados_regiao_2 : {},
@@ -17,22 +16,54 @@ document.addEventListener('DOMContentLoaded', () => {
         typeof dados_regiao_capital !== 'undefined' ? dados_regiao_capital : {}
     );
     
-    // Seleção dos elementos da página
     const mapaObjeto = document.getElementById('mapa-objeto');
     const painelInfo = document.getElementById('info-painel');
     const btnVoltar = document.getElementById('btn-voltar');
 
     let elementoSelecionado = null;
-    let eventosAtivos = null; // Controla os eventos de clique dos municípios
+    let eventosAtivos = null; 
 
-    // Função para carregar o mapa de uma região específica
+    // --- FUNÇÕES AUXILIARES ---
+
+    const buscarClima = async (nomeCidade) => {
+        // ATENÇÃO: Substitua pela sua chave pessoal da API
+        const apiKey = '6d566ea94a38beedcce0fa62a1f164edI'; 
+        const widgetClima = document.querySelector("#info-painel #weather-widget");
+
+        if (!widgetClima) return;
+
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${nomeCidade},BR&appid=${apiKey}&units=metric&lang=pt_br`;
+
+        try {
+            const resposta = await fetch(apiUrl);
+            if (!resposta.ok) throw new Error('Cidade não encontrada pela API do clima.');
+            
+            const dadosClima = await resposta.json();
+            const temperatura = Math.round(dadosClima.main.temp);
+            const descricao = dadosClima.weather[0].description;
+            const icone = dadosClima.weather[0].icon;
+            const urlIcone = `https://openweathermap.org/img/wn/${icone}@2x.png`;
+
+            widgetClima.innerHTML = `
+                <h4>Clima Atual</h4>
+                <div class="clima-info">
+                    <img src="${urlIcone}" alt="${descricao}">
+                    <p class="temperatura">${temperatura}°C</p>
+                    <p class="descricao">${descricao.charAt(0).toUpperCase() + descricao.slice(1)}</p>
+                </div>
+            `;
+        } catch (erro) {
+            console.error("Erro no widget de clima:", erro);
+            widgetClima.innerHTML = `<p style="font-size: 0.8em; color: #777;">Não foi possível carregar o clima.</p>`;
+        }
+    };
+
     const carregarMapaRegiao = (regiaoId) => {
         if (!regiaoId) return;
         mapaObjeto.data = `svgs/${regiaoId}.svg`;
         btnVoltar.classList.remove('hidden');
     };
 
-    // Função para voltar ao mapa geral
     const resetarParaMapaGeral = () => {
         mapaObjeto.data = 'svgs/mapa-geral.svg';
         btnVoltar.classList.add('hidden');
@@ -43,7 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Função para exibir informações do município
     const exibirInfoMunicipio = (municipioElement) => {
         const municipioId = municipioElement.dataset.id || municipioElement.id;
         const dados = dadosMunicipios[municipioId];
@@ -53,44 +83,48 @@ document.addEventListener('DOMContentLoaded', () => {
         elementoSelecionado = municipioElement;
 
         if (dados) {
-            painelInfo.innerHTML = `<h2>${dados.nome}</h2><p>${dados.descricao || "Nenhuma descrição disponível."}</p>`;
+            painelInfo.innerHTML = `
+                <h2>${dados.nome}</h2>
+                <p>${dados.descricao || "Nenhuma descrição disponível."}</p>
+                <div id="weather-widget">Carregando clima...</div> 
+            `;
+            // Chama a função para buscar o clima
+            buscarClima(dados.nome);
         } else {
             let nomeFormatado = municipioId.replace(/[-_]/g, " ").replace(/\b\w/g, l => l.toUpperCase());
-            painelInfo.innerHTML = `<h2>${nomeFormatado}</h2><p>Dados para este município ainda não cadastrados.</p>`;
+            painelInfo.innerHTML = `
+                <h2>${nomeFormatado}</h2>
+                <p>Dados para este município ainda não cadastrados.</p>
+            `;
         }
     };
 
-    // Evento principal: roda toda vez que um novo SVG é carregado no <object>
+    // --- EVENTOS DE CLIQUE ---
+
     mapaObjeto.addEventListener('load', () => {
         const svgDoc = mapaObjeto.contentDocument;
         if (!svgDoc) return;
 
-        // Se eventos de clique antigos existirem (de um mapa de região anterior), eles são removidos.
         if (eventosAtivos) eventosAtivos.abort();
         eventosAtivos = new AbortController();
 
-        // Procura por regiões ou municípios no SVG que acabou de carregar
         const regioesNoMapa = svgDoc.querySelectorAll('.regiao');
-        const municipiosNoMapa = svgDoc.querySelectorAll('.bairro');
-
-        // Se encontrou regiões, significa que estamos no mapa geral.
         if (regioesNoMapa.length > 0) {
             regioesNoMapa.forEach(regiao => {
                 regiao.addEventListener('click', () => carregarMapaRegiao(regiao.id));
             });
         }
 
-        // Se encontrou municípios, significa que estamos em um mapa de região.
+        const municipiosNoMapa = svgDoc.querySelectorAll('.bairro');
         if (municipiosNoMapa.length > 0) {
             municipiosNoMapa.forEach(bairro => {
                 bairro.addEventListener('click', (e) => {
                     e.stopPropagation();
                     exibirInfoMunicipio(bairro);
-                }, { signal: eventosAtivos.signal }); // Adiciona um evento que pode ser "abortado"
+                }, { signal: eventosAtivos.signal });
             });
         }
     });
     
-    // Evento do botão de voltar
     btnVoltar.addEventListener('click', resetarParaMapaGeral);
 });
