@@ -5,50 +5,61 @@
     box-sizing: border-box;
 }
 
-body {
+/* 1. Força o HTML e o Body a ocuparem 100% da altura e remove a barra de rolagem principal */
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden; /* Esconde a barra de rolagem principal da página */
     font-family: 'Roboto', sans-serif;
     background-color: #f0f2f5;
-    color: #333;
-    margin: 0;
-    padding: 2em;
-    text-align: center;
 }
 
-/* --- LAYOUT PRINCIPAL --- */
+/* --- LAYOUT DE TELA CHEIA --- */
+
+/* 2. O nosso novo contêiner mestre */
+.app-container {
+    display: flex;
+    flex-direction: column; /* Organiza os filhos em coluna (título em cima, conteúdo embaixo) */
+    height: 100vh; /* A altura será sempre 100% da altura da tela (viewport height) */
+    padding: 2em;
+}
+
 h1 {
     color: #2c3e50;
     font-weight: 700;
+    margin-top: 0;
+    flex-shrink: 0; /* Impede que o título seja espremido */
 }
 
+p {
+    flex-shrink: 0; /* Impede que o parágrafo seja espremido */
+}
+
+/* 3. O contêiner do mapa e do painel agora deve crescer para ocupar o espaço restante */
 .container-principal {
     display: flex;
-    flex-wrap: wrap; 
     gap: 30px; 
-    justify-content: center;
-    align-items: flex-start;
-    margin-top: 20px;
-    max-width: 1600px;
-    margin-left: auto;
-    margin-right: auto;
+    flex-grow: 1; /* Faz este elemento crescer e ocupar todo o espaço vertical disponível */
+    min-height: 0; /* Truque de Flexbox para evitar problemas de overflow em alguns navegadores */
 }
 
 /* --- MAPA E PAINEL DE INFORMAÇÕES --- */
 
 #mapa-container {
     flex: 3;
-    min-width: 400px; 
     position: relative;
     background-color: #ffffff;
     border-radius: 12px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     padding: 15px;
-    overflow: hidden;
+    display: flex; /* Adicionado para centralizar o objeto */
+    flex-direction: column;
 }
 
 #mapa-objeto {
     width: 100%;
     height: 100%;
-    display: block;
+    min-height: 0; /* Garante que o mapa possa encolher se necessário */
 }
 
 #info-painel {
@@ -60,8 +71,9 @@ h1 {
     padding: 25px;
     text-align: left;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    height: fit-content; 
-    transition: all 0.3s ease;
+    
+    /* 4. A MÁGICA: Se o conteúdo for muito grande, o painel cria sua própria barra de rolagem */
+    overflow-y: auto; 
 }
 
 #info-painel h2 {
@@ -71,7 +83,7 @@ h1 {
     padding-bottom: 10px;
 }
 
-/* --- ESTILOS DE INTERATIVIDADE (CONTROLADOS PELO JAVASCRIPT) --- */
+/* --- ESTILOS DE INTERATIVIDADE (sem alterações) --- */
 
 #btn-voltar {
     position: absolute;
@@ -81,7 +93,6 @@ h1 {
     padding: 10px 20px;
     font-size: 14px;
     font-weight: 700;
-    color: #333;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 50px;
@@ -100,7 +111,6 @@ h1 {
     display: none !important;
 }
 
-/* Estas classes são a chave da interatividade */
 .zoom-ativo .regiao:not(.foco) {
     display: none;
 }
