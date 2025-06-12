@@ -1,88 +1,54 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- BANCO DE DADOS DOS MUNICÍPIOS ---
-    const dadosMunicipios = {
-        // Região 01
-        japeri: { nome: "Japeri", descricao: "Descrição de Japeri..." },
-        duque_de_caxias: { nome: "Duque de Caxias", descricao: "Descrição de Duque de Caxias..." },
-        nova_iguaçu: { nome: "Nova Iguaçu", descricao: "Descrição de Nova Iguaçu..." },
-        mesquita: { nome: "Mesquita", descricao: "Descrição de Mesquita..." },
-        nilopolis: { nome: "Nilópolis", descricao: "Descrição de Nilópolis..." },
-        sao_joao_de_meriti: { nome: "São João de Meriti", descricao: "Descrição de São João de Meriti..." },
-        belford_roxo: { nome: "Belford Roxo", descricao: "Descrição de Belford Roxo..." },
-        queimados: { nome: "Queimados", descricao: "Descrição de Queimados..." },
+    // --- MONTAGEM DO BANCO DE DADOS COMPLETO ---
+    // Junta todos os objetos de dados (dados_regiao_1, dados_regiao_2, etc.) em um único objeto.
+    const dadosMunicipios = Object.assign({},
+        dados_regiao_1,
+        dados_regiao_2,
+        dados_regiao_3,
+        dados_regiao_4,
+        dados_regiao_5,
+        dados_regiao_6,
+        dados_regiao_7,
+        dados_regiao_8,
+        dados_regiao_9,
+        dados_regiao_10,
+        dados_regiao_11,
+        dados_regiao_12,
+        dados_regiao_capital
+        // Adicione aqui as variáveis de todas as suas regiões
+    );
+    
+    console.log("Dados de todos os municípios carregados:", dadosMunicipios);
 
-        // Região 02
-        mage: { nome: "Magé", descricao: "Descrição de Magé..." },
-        guapimirim: { nome: "Guapimirim", descricao: "Descrição de Guapimirim..." },
-        itaborai: { nome: "Itaboraí", descricao: "Descrição de Itaboraí..." },
-        tangua: { nome: "Tanguá", descricao: "Descrição de Tanguá..." },
-        niteroi: { nome: "Niterói", descricao: "Descrição de Niterói..." },
-        sao_goncalo: { nome: "São Gonçalo", descricao: "Descrição de São Gonçalo..." },
-
-        // Região 03
-        rio_bonito: { nome: "Rio Bonito", descricao: "Descrição de Rio Bonito..." },
-        marica: { nome: "Maricá", descricao: "Descrição de Maricá..." },
-        saquarema: { nome: "Saquarema", descricao: "Descrição de Saquarema..." },
-        silva_jardim: { nome: "Silva Jardim", descricao: "Descrição de Silva Jardim..." },
-        casimiro_de_abreu: { nome: "Casimiro de Abreu", descricao: "Descrição de Casimiro de Abreu..." },
-
-        // Região 04
-        quatis: { nome: "Quatis", descricao: "Descrição de Quatis..." },
-        itatiaia: { nome: "Itatiaia", descricao: "Descrição de Itatiaia..." },
-        resende: { nome: "Resende", descricao: "Descrição de Resende..." },
-        rio_claro: { nome: "Rio Claro", descricao: "Descrição de Rio Claro..." },
-        barra_mansa: { nome: "Barra Mansa", descricao: "Descrição de Barra Mansa..." },
-        pirai: { nome: "Piraí", descricao: "Descrição de Piraí..." },
-        porto_real: { nome: "Porto Real", descricao: "Descrição de Porto Real..." },
-        pinheiral: { nome: "Pinheiral", descricao: "Descrição de Pinheiral..." },
-        volta_redonda: { nome: "Volta Redonda", descricao: "Descrição de Volta Redonda..." },
-
-        // Região 06
-        com_levy_gasparian: { nome: "Comendador Levy Gasparian", descricao: "Descrição de Comendador Levy Gasparian..."},
-        paty_do_alferes: { nome: "Paty do Alferes", descricao: "Descrição de Paty do Alferes..."},
-        petropolis: { nome: "Petrópolis", descricao: "Descrição de Petrópolis..."},
-        tres_rios: { nome: "Três Rios", descricao: "Descrição de Três Rios..."},
-        paraiba_do_sul: { nome: "Paraíba do Sul", descricao: "Descrição de Paraíba do Sul..."},
-        areal: { nome: "Areal", descricao: "Descrição de Areal..."},
-        miguel_pereira: { nome: "Miguel Pereira", descricao: "Descrição de Miguel Pereira..."},
-
-        // Região 07
-        itaperuna: { nome: "Itaperuna", descricao: "Descrição de Itaperuna..." },
-        miracema: { nome: "Miracema", descricao: "Descrição de Miracema..." },
-        bom_jesus_de_itabapoana: { nome: "Bom Jesus de Itabapoana", descricao: "Descrição de Bom Jesus de Itabapoana..." },
-        santo_antonio_de_padua: { nome: "Santo Antônio de Pádua", descricao: "Descrição de Santo Antônio de Pádua..." },
-        itaocara: { nome: "Itaocara", descricao: "Descrição de Itaocara..." },
-        varre_sai: { nome: "Varre-Sai", descricao: "Descrição de Varre-Sai..." },
-        porciuncula: { nome: "Porciúncula", descricao: "Descrição de Porciúncula..." },
-        cambuci: { nome: "Cambuci", descricao: "Descrição de Cambuci..." },
-        laje_de_muriae: { nome: "Laje de Muriaé", descricao: "Descrição de Laje de Muriaé..." },
-        aperibe: { nome: "Aperibé", descricao: "Descrição de Aperibé..." },
-        sao_joao_de_uba: { nome: "São João de Ubá", descricao: "Descrição de São João de Ubá..."},
-        natividade: { nome: "Natividade", descricao: "Descrição de Natividade..."},
-
-        // Região 09
-        seropedica: { nome: "Seropédica", descricao: "Descrição de Seropédica..." },
-        itaguai: { nome: "Itaguaí", descricao: "Descrição de Itaguaí..." },
-        mangaratiba: { nome: "Mangaratiba", descricao: "Descrição de Mangaratiba..." },
-        angra: { nome: "Angra dos Reis", descricao: "Descrição de Angra dos Reis..." },
-        paraty: { nome: "Paraty", descricao: "Descrição de Paraty..." },
-    };
-
+    // --- SELEÇÃO DOS ELEMENTOS PRINCIPAIS ---
     const mapaContainer = document.getElementById('mapa-container');
     const mapaObjeto = document.getElementById('mapa-objeto');
     const painelInfo = document.getElementById('info-painel');
     const btnVoltar = document.getElementById('btn-voltar');
 
+    // --- LÓGICA PRINCIPAL ---
+    
+    // Espera o SVG ser completamente carregado dentro da tag <object>
     mapaObjeto.addEventListener('load', () => {
+        console.log("Mapa SVG carregado com sucesso!");
+
         const svgDoc = mapaObjeto.contentDocument;
+        if (!svgDoc) {
+            console.error("Erro: Não foi possível acessar o conteúdo do SVG. Verifique se o arquivo mapa.svg está na mesma pasta e sem erros.");
+            return;
+        }
+
         const svgMapa = svgDoc.documentElement;
+        const todasAsRegioes = svgDoc.querySelectorAll('.regiao');
+        const todosOsBairros = svgDoc.querySelectorAll('.bairro');
         
+        console.log(`Encontradas ${todasAsRegioes.length} regiões e ${todosOsBairros.length} bairros/municípios.`);
+
         const viewBoxOriginal = svgMapa.getAttribute('viewBox');
         let bairroSelecionadoAnteriormente = null;
 
-        const todasAsRegioes = svgDoc.querySelectorAll('.regiao');
-        const todosOsBairros = svgDoc.querySelectorAll('.bairro');
+        // --- FUNÇÕES AUXILIARES ---
 
         const zoomNaRegiao = (regiaoElement) => {
             const bbox = regiaoElement.getBBox();
@@ -93,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             mapaContainer.classList.add('zoom-ativo');
             regiaoElement.classList.add('foco');
             btnVoltar.classList.remove('hidden');
+            console.log(`Zoom na região: ${regiaoElement.id}`);
         };
 
         const resetarZoom = () => {
@@ -111,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 bairroSelecionadoAnteriormente.classList.remove('selecionado');
                 bairroSelecionadoAnteriormente = null;
             }
+            console.log("Zoom resetado.");
         };
 
         const exibirInfoMunicipio = (municipioElement) => {
@@ -124,6 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             municipioElement.classList.add('selecionado');
             bairroSelecionadoAnteriormente = municipioElement;
+            console.log(`Exibindo informações de: ${municipioId}`);
 
             if (dados) {
                 painelInfo.innerHTML = `
@@ -132,11 +101,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
             } else {
                 painelInfo.innerHTML = `
-                    <h2>${municipioId.replace(/_/g, " ")}</h2>
+                    <h2>${municipioId.replace(/_/g, " ").replace(/-/g, " ")}</h2>
                     <p>Dados para este município ainda não cadastrados.</p>
                 `;
             }
         };
+
+        // --- ADICIONANDO OS EVENTOS DE CLIQUE ---
 
         todasAsRegioes.forEach(regiao => {
             regiao.addEventListener('click', (event) => {
@@ -155,5 +126,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         btnVoltar.addEventListener('click', resetarZoom);
+
+        console.log("Tudo pronto! O mapa está interativo.");
+    });
+
+    mapaObjeto.addEventListener('error', () => {
+        console.error("ERRO: O arquivo 'mapa.svg' não pôde ser carregado. Verifique o nome e o caminho do arquivo no seu index.html.");
     });
 });
