@@ -54,6 +54,7 @@ h1 {
 #info-painel {
     flex: 1;
     min-width: 340px;
+    max-width: 400px;
     background-color: #ffffff;
     border-radius: 12px;
     padding: 25px;
@@ -99,23 +100,17 @@ h1 {
     display: none !important;
 }
 
-/* Quando o mapa estiver com zoom... */
+/* Estas classes são a chave da interatividade */
 .zoom-ativo .regiao:not(.foco) {
-    /* Esconde as outras regiões */
     display: none;
 }
 .zoom-ativo .regiao.foco {
-    /* Impede que a região em foco seja clicada novamente */
     pointer-events: none;
     cursor: default;
 }
-
-/* Por padrão, os bairros não são clicáveis */
 .bairro {
     pointer-events: none;
 }
-
-/* Mas quando o zoom está ativo, os bairros da região em foco se tornam clicáveis */
 .zoom-ativo .regiao.foco .bairro {
     pointer-events: auto;
 }

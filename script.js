@@ -1,58 +1,79 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- BANCO DE DADOS DOS MUNICÍPIOS ---
-    // A chave (ex: "mage") deve ser IGUAL ao 'id' do município no SVG.
-    // Para municípios com várias partes (ilhas), usamos o 'data-id'.
     const dadosMunicipios = {
         // Região 01
-        japeri: { nome: "Japeri", descricao: "Japeri é um município da Baixada Fluminense, conhecido por sua estação de trem histórica e áreas de preservação ambiental." },
-        duque_de_caxias: { nome: "Duque de Caxias", descricao: "Um dos mais populosos e economicamente importantes municípios da Baixada Fluminense, com uma grande refinaria de petróleo." },
-        nova_iguaçu: { nome: "Nova Iguaçu", descricao: "Conhecido por sua vasta área territorial e forte centro comercial." },
-        mesquita: { nome: "Mesquita", descricao: "Município da Baixada Fluminense, desmembrado de Nova Iguaçu." },
-        nilopolis: { nome: "Nilópolis", descricao: "Famoso por ser o berço da escola de samba Beija-Flor." },
-        sao_joao_de_meriti: { nome: "São João de Meriti", descricao: "Conhecido como o 'formigueiro das Américas' devido à sua alta densidade demográfica." },
-        belford_roxo: { nome: "Belford Roxo", descricao: "Município da Baixada Fluminense com uma rica história ligada à expansão ferroviária." },
-        queimados: { nome: "Queimados", descricao: "Cidade com crescente desenvolvimento industrial na Baixada Fluminense." },
+        japeri: { nome: "Japeri", descricao: "Descrição de Japeri..." },
+        duque_de_caxias: { nome: "Duque de Caxias", descricao: "Descrição de Duque de Caxias..." },
+        nova_iguaçu: { nome: "Nova Iguaçu", descricao: "Descrição de Nova Iguaçu..." },
+        mesquita: { nome: "Mesquita", descricao: "Descrição de Mesquita..." },
+        nilopolis: { nome: "Nilópolis", descricao: "Descrição de Nilópolis..." },
+        sao_joao_de_meriti: { nome: "São João de Meriti", descricao: "Descrição de São João de Meriti..." },
+        belford_roxo: { nome: "Belford Roxo", descricao: "Descrição de Belford Roxo..." },
+        queimados: { nome: "Queimados", descricao: "Descrição de Queimados..." },
 
         // Região 02
-        mage: { nome: "Magé", descricao: "Município histórico da Baixada Fluminense, com rica herança do período colonial e belezas naturais." },
-        guapimirim: { nome: "Guapimirim", descricao: "Famoso por abrigar parte do Parque Nacional da Serra dos Órgãos, sendo um destino de ecoturismo." },
-        itaborai: { nome: "Itaboraí", descricao: "Conhecido pelo Complexo Petroquímico do Rio de Janeiro (COMPERJ)." },
-        tangua: { nome: "Tanguá", descricao: "Conhecido por suas plantações de laranja e por ser um município tranquilo da região metropolitana." },
+        mage: { nome: "Magé", descricao: "Descrição de Magé..." },
+        guapimirim: { nome: "Guapimirim", descricao: "Descrição de Guapimirim..." },
+        itaborai: { nome: "Itaboraí", descricao: "Descrição de Itaboraí..." },
+        tangua: { nome: "Tanguá", descricao: "Descrição de Tanguá..." },
+        niteroi: { nome: "Niterói", descricao: "Descrição de Niterói..." },
+        sao_goncalo: { nome: "São Gonçalo", descricao: "Descrição de São Gonçalo..." },
 
         // Região 03
-        rio_bonito: { nome: "Rio Bonito", descricao: "Município com forte vocação agropecuária e que serve como um importante entroncamento rodoviário." },
-        marica: { nome: "Maricá", descricao: "Conhecida por suas lagoas, praias e pela política de renda básica de cidadania." },
-        saquarema: { nome: "Saquarema", descricao: "Considerada a 'Capital Nacional do Surf', com praias famosas por suas ondas." },
-        silva_jardim: { nome: "Silva Jardim", descricao: "Lar da Reserva Biológica Poço das Antas, principal refúgio do mico-leão-dourado." },
-        casimiro_de_abreu: { nome: "Casimiro de Abreu", descricao: "Terra do poeta que lhe dá nome, famosa pelo turismo rural e de aventura." },
-        
-        // Região 04
-        quatis: { nome: "Quatis", descricao: "Pequeno e acolhedor município no Vale do Paraíba Fluminense." },
-        itatiaia: { nome: "Itatiaia", descricao: "Sede do Parque Nacional do Itatiaia, o primeiro parque nacional do Brasil, famoso por suas montanhas e trilhas." },
-        resende: { nome: "Resende", descricao: "Importante polo industrial, militar (sede da AMAN) e universitário." },
-        rio_claro: { nome: "Rio Claro", descricao: "Conhecido por suas fazendas históricas do ciclo do café e belezas naturais." },
-        barra_mansa: { nome: "Barra Mansa", descricao: "Importante centro siderúrgico e ferroviário no sul do estado." },
-        pirai: { nome: "Piraí", descricao: "Cidade histórica do Vale do Café, conhecida também pela Represa de Ribeirão das Lajes." },
-        porto_real: { nome: "Porto Real", descricao: "Única colônia finlandesa no Brasil, com forte influência cultural e industrial." },
-        pinheiral: { nome: "Pinheiral", descricao: "Município com forte tradição na pecuária leiteira e agricultura." },
-        volta_redonda: { nome: "Volta Redonda", descricao: "Conhecida como a 'Cidade do Aço' por abrigar a Companhia Siderúrgica Nacional (CSN)." },
-        
-        // Região 09
-        seropedica: { nome: "Seropédica", descricao: "Município conhecido por abrigar a Universidade Federal Rural do Rio de Janeiro (UFRRJ)." },
-        itaguai: { nome: "Itaguaí", descricao: "Local de grande importância com o Porto de Itaguaí, um dos maiores do país." },
-        mangaratiba: { nome: "Mangaratiba", descricao: "Belo município da Costa Verde, com praias, ilhas e resorts." },
-        angra: { nome: "Angra dos Reis", descricao: "Famosa por suas 365 ilhas, incluindo a Ilha Grande, e usinas nucleares." },
-        paraty: { nome: "Paraty", descricao: "Cidade histórica colonial, Patrimônio Mundial da UNESCO, conhecida por sua arquitetura, cultura e natureza exuberante." },
+        rio_bonito: { nome: "Rio Bonito", descricao: "Descrição de Rio Bonito..." },
+        marica: { nome: "Maricá", descricao: "Descrição de Maricá..." },
+        saquarema: { nome: "Saquarema", descricao: "Descrição de Saquarema..." },
+        silva_jardim: { nome: "Silva Jardim", descricao: "Descrição de Silva Jardim..." },
+        casimiro_de_abreu: { nome: "Casimiro de Abreu", descricao: "Descrição de Casimiro de Abreu..." },
 
-        // Adicione aqui as informações para todos os outros bairros que você nomear...
+        // Região 04
+        quatis: { nome: "Quatis", descricao: "Descrição de Quatis..." },
+        itatiaia: { nome: "Itatiaia", descricao: "Descrição de Itatiaia..." },
+        resende: { nome: "Resende", descricao: "Descrição de Resende..." },
+        rio_claro: { nome: "Rio Claro", descricao: "Descrição de Rio Claro..." },
+        barra_mansa: { nome: "Barra Mansa", descricao: "Descrição de Barra Mansa..." },
+        pirai: { nome: "Piraí", descricao: "Descrição de Piraí..." },
+        porto_real: { nome: "Porto Real", descricao: "Descrição de Porto Real..." },
+        pinheiral: { nome: "Pinheiral", descricao: "Descrição de Pinheiral..." },
+        volta_redonda: { nome: "Volta Redonda", descricao: "Descrição de Volta Redonda..." },
+
+        // Região 06
+        com_levy_gasparian: { nome: "Comendador Levy Gasparian", descricao: "Descrição de Comendador Levy Gasparian..."},
+        paty_do_alferes: { nome: "Paty do Alferes", descricao: "Descrição de Paty do Alferes..."},
+        petropolis: { nome: "Petrópolis", descricao: "Descrição de Petrópolis..."},
+        tres_rios: { nome: "Três Rios", descricao: "Descrição de Três Rios..."},
+        paraiba_do_sul: { nome: "Paraíba do Sul", descricao: "Descrição de Paraíba do Sul..."},
+        areal: { nome: "Areal", descricao: "Descrição de Areal..."},
+        miguel_pereira: { nome: "Miguel Pereira", descricao: "Descrição de Miguel Pereira..."},
+
+        // Região 07
+        itaperuna: { nome: "Itaperuna", descricao: "Descrição de Itaperuna..." },
+        miracema: { nome: "Miracema", descricao: "Descrição de Miracema..." },
+        bom_jesus_de_itabapoana: { nome: "Bom Jesus de Itabapoana", descricao: "Descrição de Bom Jesus de Itabapoana..." },
+        santo_antonio_de_padua: { nome: "Santo Antônio de Pádua", descricao: "Descrição de Santo Antônio de Pádua..." },
+        itaocara: { nome: "Itaocara", descricao: "Descrição de Itaocara..." },
+        varre_sai: { nome: "Varre-Sai", descricao: "Descrição de Varre-Sai..." },
+        porciuncula: { nome: "Porciúncula", descricao: "Descrição de Porciúncula..." },
+        cambuci: { nome: "Cambuci", descricao: "Descrição de Cambuci..." },
+        laje_de_muriae: { nome: "Laje de Muriaé", descricao: "Descrição de Laje de Muriaé..." },
+        aperibe: { nome: "Aperibé", descricao: "Descrição de Aperibé..." },
+        sao_joao_de_uba: { nome: "São João de Ubá", descricao: "Descrição de São João de Ubá..."},
+        natividade: { nome: "Natividade", descricao: "Descrição de Natividade..."},
+
+        // Região 09
+        seropedica: { nome: "Seropédica", descricao: "Descrição de Seropédica..." },
+        itaguai: { nome: "Itaguaí", descricao: "Descrição de Itaguaí..." },
+        mangaratiba: { nome: "Mangaratiba", descricao: "Descrição de Mangaratiba..." },
+        angra: { nome: "Angra dos Reis", descricao: "Descrição de Angra dos Reis..." },
+        paraty: { nome: "Paraty", descricao: "Descrição de Paraty..." },
     };
 
+    const mapaContainer = document.getElementById('mapa-container');
     const mapaObjeto = document.getElementById('mapa-objeto');
     const painelInfo = document.getElementById('info-painel');
     const btnVoltar = document.getElementById('btn-voltar');
 
-    // Espera o SVG ser completamente carregado dentro da tag <object>
     mapaObjeto.addEventListener('load', () => {
         const svgDoc = mapaObjeto.contentDocument;
         const svgMapa = svgDoc.documentElement;
@@ -63,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const todasAsRegioes = svgDoc.querySelectorAll('.regiao');
         const todosOsBairros = svgDoc.querySelectorAll('.bairro');
 
-        // Função para dar zoom em uma região
         const zoomNaRegiao = (regiaoElement) => {
             const bbox = regiaoElement.getBBox();
             const padding = 20;
@@ -75,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
             btnVoltar.classList.remove('hidden');
         };
 
-        // Função para resetar o zoom
         const resetarZoom = () => {
             svgMapa.setAttribute('viewBox', viewBoxOriginal);
             mapaContainer.classList.remove('zoom-ativo');
@@ -94,15 +113,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // Função para exibir as informações de um município
         const exibirInfoMunicipio = (municipioElement) => {
-            // Lógica inteligente: usa o 'data-id' para grupos de ilhas, ou o 'id' normal
+            // Lógica para lidar com municípios de várias partes (como ilhas)
             const municipioId = municipioElement.dataset.id || municipioElement.id;
             const dados = dadosMunicipios[municipioId];
 
             if (bairroSelecionadoAnteriormente) {
                 bairroSelecionadoAnteriormente.classList.remove('selecionado');
             }
+
             municipioElement.classList.add('selecionado');
             bairroSelecionadoAnteriormente = municipioElement;
 
@@ -119,9 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // --- EVENTOS DE CLIQUE ---
-
-        // 1. Adiciona listener de clique para CADA REGIÃO
         todasAsRegioes.forEach(regiao => {
             regiao.addEventListener('click', (event) => {
                 if (mapaContainer.classList.contains('zoom-ativo')) return;
@@ -130,17 +146,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // 2. Adiciona listener de clique para CADA BAIRRO/MUNICÍPIO
         todosOsBairros.forEach(bairro => {
             bairro.addEventListener('click', (event) => {
-                // Só funciona se o zoom estiver ativo
                 if (!mapaContainer.classList.contains('zoom-ativo')) return;
                 event.stopPropagation();
                 exibirInfoMunicipio(bairro);
             });
         });
         
-        // 3. Adiciona listener para o botão de voltar
         btnVoltar.addEventListener('click', resetarZoom);
     });
 });
