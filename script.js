@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- BANCO DE DADOS DOS MUNICÍPIOS ---
     const dadosMunicipios = Object.assign({},
         typeof dados_regiao_1 !== 'undefined' ? dados_regiao_1 : {},
         typeof dados_regiao_2 !== 'undefined' ? dados_regiao_2 : {},
@@ -17,21 +16,15 @@ document.addEventListener('DOMContentLoaded', () => {
         typeof dados_regiao_capital !== 'undefined' ? dados_regiao_capital : {}
     );
     
-    // --- SELEÇÃO DOS ELEMENTOS PRINCIPAIS DA PÁGINA ---
     const mapaContainer = document.getElementById('mapa-container');
     const mapaObjeto = document.getElementById('mapa-objeto');
     const painelInfo = document.getElementById('info-painel');
     const btnVoltar = document.getElementById('btn-voltar');
 
-    // --- LÓGICA PRINCIPAL ---
-    
     mapaObjeto.addEventListener('load', () => {
         
         const svgDoc = mapaObjeto.contentDocument;
-        if (!svgDoc) {
-            console.error("Erro: Não foi possível acessar o conteúdo do SVG.");
-            return;
-        }
+        if (!svgDoc) { return; }
 
         const svgMapa = svgDoc.documentElement;
         const todasAsRegioes = svgDoc.querySelectorAll('.regiao');
@@ -40,44 +33,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const viewBoxOriginal = svgMapa.getAttribute('viewBox');
         let elementoSelecionado = null;
 
-        // --- FUNÇÕES AUXILIARES ---
-
         const zoomNaRegiao = (regiaoClicada) => {
             const bbox = regiaoClicada.getBBox();
             const padding = 20;
             const novoViewBox = `${bbox.x - padding} ${bbox.y - padding} ${bbox.width + (padding * 2)} ${bbox.height + (padding * 2)}`;
             
+            // 1. Aplica o zoom no SVG
             svgMapa.setAttribute('viewBox', novoViewBox);
             
-            // LÓGICA DE VISIBILIDADE FORÇADA VIA JAVASCRIPT
-            todasAsRegioes.forEach(regiao => {
-                if (regiao.id === regiaoClicada.id) {
-                    regiao.style.display = 'block';
-                    // ADICIONADO DE VOLTA: Marca a região com a classe .foco para o CSS saber qual é
-                    regiao.classList.add('foco');
-                } else {
-                    regiao.style.display = 'none';
-                }
-            });
-
-            // ADICIONADO DE VOLTA: Avisa o CSS que estamos em modo de zoom
-            mapaContainer.classList.add('zoom-ativo');
+            // 2. Adiciona as classes para o CSS fazer sua mágica
+            mapaContainer.classList.add('mapa-zoom-ativo');
+            regiaoClicada.classList.add('foco');
             
+            // 3. Mostra o botão de voltar
             btnVoltar.classList.remove('hidden');
         };
 
         const resetarZoom = () => {
             svgMapa.setAttribute('viewBox', viewBoxOriginal);
             
-            // Faz todas as regiões reaparecerem
-            todasAsRegioes.forEach(regiao => {
-                regiao.style.display = 'block';
-                // ADICIONADO DE VOLTA: Limpa a classe .foco
-                regiao.classList.remove('foco');
-});
-
-            // ADICIONADO DE VOLTA: Avisa o CSS que saímos do modo de zoom
-            mapaContainer.classList.remove('zoom-ativo');
+            // Limpa as classes de estado
+            mapaContainer.classList.remove('mapa-zoom-ativo');
+            const regiaoEmFoco = svgDoc.querySelector('.regiao.foco');
+            if (regiaoEmFoco) {
+                regiaoEmFoco.classList.remove('foco');
+            }
 
             btnVoltar.classList.add('hidden');
             painelInfo.innerHTML = '<h2>Selecione uma Região</h2><p>Clique em uma área do mapa para começar a explorar.</p>';
@@ -117,18 +97,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // --- EVENTOS DE CLIQUE ---
 
         todasAsRegioes.forEach(regiao => {
-            regiao.addEventListener('click', (event) => {
-                // Esta verificação agora é redundante por causa da lógica de esconder, mas não prejudica.
-                if (mapaContainer.classList.contains('zoom-ativo')) return;
-                event.stopPropagation();
+            regiao.addEventListener('click', () => {
                 zoomNaRegiao(regiao);
             });
         });
 
         todosOsBairros.forEach(bairro => {
-            bairro.addEventListener('click', (event) => {
-                // A interatividade agora é controlada pelo CSS 'pointer-events'
-                event.stopPropagation();
+            bairro.addEventListener('click', () => {
                 exibirInfoMunicipio(bairro);
             });
         });
@@ -137,6 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     mapaObjeto.addEventListener('error', () => {
-        console.error("ERRO: O arquivo 'mapa.svg' não pôde ser carregado. Verifique o nome e o caminho do arquivo no seu index.html.");
+        console.error("ERRO: O arquivo 'mapa.svg' não pôde ser carregado.");
     });
 });

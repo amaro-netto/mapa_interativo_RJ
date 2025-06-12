@@ -39,7 +39,6 @@ h1 {
     max-width: 900px; 
     min-width: 400px; 
     position: relative;
-    /* Trava a proporção do container para ele não mudar de tamanho com o zoom */
     aspect-ratio: 4 / 3;
 }
 
@@ -70,7 +69,7 @@ h1 {
     padding-bottom: 10px;
 }
 
-/* --- ELEMENTOS DE INTERATIVIDADE --- */
+/* --- ESTILOS DE INTERATIVIDADE (VERSÃO FINAL) --- */
 
 #btn-voltar {
     position: absolute;
@@ -80,7 +79,6 @@ h1 {
     padding: 10px 20px;
     font-size: 14px;
     font-weight: 700;
-    color: #333;
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 50px;
@@ -95,7 +93,32 @@ h1 {
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-/* Classe para esconder/mostrar o botão de voltar */
 .hidden {
     display: none !important;
+}
+
+
+/* --- LÓGICA DE ZOOM E CLIQUE (AQUI ESTÁ A CORREÇÃO) --- */
+
+/* Quando o mapa está com zoom... */
+.mapa-zoom-ativo .regiao:not(.foco) {
+    /* ...todas as regiões que NÃO estão em foco DESAPARECEM. */
+    display: none;
+}
+
+.mapa-zoom-ativo .regiao.foco {
+    /* A região em foco em si não é mais clicável. */
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Por padrão, os municípios não são clicáveis. */
+.bairro {
+    pointer-events: none;
+}
+
+/* APENAS quando o mapa está com zoom, os municípios DENTRO da região em foco se tornam clicáveis. */
+.mapa-zoom-ativo .regiao.foco .bairro {
+    pointer-events: auto;
+    cursor: pointer;
 }
