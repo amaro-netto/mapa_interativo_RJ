@@ -104,21 +104,41 @@ h1 {
     margin-top: 25px;
     padding-top: 15px;
     border-top: 1px solid #e7eaf3;
+    display: flex; /* Flexbox para organizar Hoje/Amanhã */
+    flex-wrap: wrap; /* Permite quebrar em linhas menores */
+    gap: 15px; /* Espaçamento entre as seções de clima */
+    justify-content: center; /* Centraliza as seções */
 }
 
 #weather-widget h4 {
-    margin: 0 0 10px 0;
+    width: 100%; /* Ocupa a largura total para o título */
+    text-align: center;
+    margin: 0 0 15px 0;
     color: #34495e;
-    font-size: 1em;
+    font-size: 1.1em;
+}
+
+.clima-section {
+    flex: 1; /* Faz as seções Hoje/Amanhã flexíveis */
+    min-width: 120px; /* Largura mínima para cada seção */
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.clima-section h5 {
+    margin: 0 0 5px 0;
+    color: #555;
+    font-size: 0.9em;
 }
 
 .clima-info {
     display: flex;
+    flex-direction: column; /* Icone, temperatura, descrição em coluna */
     align-items: center;
-    gap: 10px;
-    background-color: #f0f2f5;
-    border-radius: 8px;
-    padding: 5px 10px;
+    gap: 5px; /* Espaçamento entre os itens do clima */
 }
 
 .clima-info img {
@@ -127,7 +147,7 @@ h1 {
 }
 
 .clima-info .temperatura {
-    font-size: 1.8em;
+    font-size: 1.6em; /* Um pouco menor para caber na seção */
     font-weight: 700;
     margin: 0;
     color: #2c3e50;
@@ -135,6 +155,71 @@ h1 {
 
 .clima-info .descricao {
     margin: 0;
-    font-size: 0.9em;
+    font-size: 0.8em; /* Um pouco menor */
     color: #555;
+    text-align: center;
+}
+
+/* --- ESTILOS PARA ALERTAS METEOROLÓGICOS --- */
+#alerts-widget {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #e7eaf3;
+}
+
+#alerts-widget h4 {
+    margin: 0 0 10px 0;
+    color: #c0392b; /* Cor mais chamativa para alertas */
+    font-size: 1.1em;
+    text-align: center;
+}
+
+.alerta-info {
+    background-color: #ffebeb; /* Fundo claro para alertas */
+    border: 1px solid #e74c3c; /* Borda para destaque */
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.alerta-info .alerta-evento {
+    font-weight: 700;
+    color: #c0392b;
+    margin: 0 0 5px 0;
+}
+
+.alerta-info .alerta-descricao {
+    font-size: 0.9em;
+    color: #333;
+    margin: 0 0 5px 0;
+}
+
+.alerta-info .alerta-sender {
+    font-size: 0.8em;
+    color: #777;
+    text-align: right;
+    margin: 0;
+}
+
+/* --- NOVOS ESTILOS PARA O EFEITO DE ZOOM NO SVG --- */
+#mapa-objeto svg .regiao {
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transform-origin: center center;
+}
+
+#mapa-objeto svg .regiao.zoom-selecionado {
+    transform: scale(1.5); /* Ajuste o valor do zoom conforme o desejado */
+    opacity: 1;
+}
+
+#mapa-objeto svg .regiao.zoom-afastado {
+    transform: scale(0.8); /* Opcional: diminui as outras regiões */
+    opacity: 0.3;
+}
+
+/* Estilo para a cor dos strokes dos mapas SVG (mantido) */
+.regiao, .bairro {
+    stroke: #FFFFFF;
+    stroke-width: 0.5;
 }

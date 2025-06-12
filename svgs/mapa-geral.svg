@@ -1,7 +1,25 @@
 <svg id="mapa-geral" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1072.9 711.41">
     <style>
-      .regiao { cursor: pointer; transition: opacity 0.2s ease-in-out; }
-      .regiao:hover { opacity: 0.7; }
+        /* Estilos base para as regiões no mapa geral */
+        .regiao {
+            fill: #c0c0c0; /* Você pode ajustar essa cor base */
+            stroke: #FFFFFF;
+            stroke-width: 0.5;
+            transition: fill 0.2s ease-in-out, transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            transform-origin: center center;
+            cursor: pointer; /* Adiciona cursor de clique */
+        }
+        .regiao:hover {
+            opacity: 0.7; /* Efeito de hover */
+        }
+        .regiao.zoom-selecionado {
+            transform: scale(1.5); /* Ajuste o valor do zoom conforme o desejado */
+            opacity: 1;
+        }
+        .regiao.zoom-afastado {
+            transform: scale(0.8);
+            opacity: 0.3;
+        }
 
       /* Cores de cada região */
       #regiao_01 { fill: #f18637; }
