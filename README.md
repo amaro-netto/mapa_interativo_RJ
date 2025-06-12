@@ -14,6 +14,12 @@ A ideia central é fornecer um *template* funcional que possa ser facilmente int
 
 ![Screenshot do Projeto](https://github.com/user-attachments/assets/fed41392-dbef-46ac-809e-3c21a6b5018f)
 
+
+
+https://github.com/user-attachments/assets/94cb1a0e-580d-4684-aa37-83bc5ea23a72
+
+
+
 ## ✨ Funcionalidades Atuais (Fase 1)
 
 * **Mapa Vetorial (SVG) Otimizado:** Utiliza um mapa SVG detalhado, com caminhos simplificados para garantir performance e carregamento rápido.
@@ -29,7 +35,7 @@ A ideia central é fornecer um *template* funcional que possa ser facilmente int
 
 * **Tecnologias:** HTML5, CSS3 (Flexbox), JavaScript (ES6+).
 * **Ferramentas de Desenvolvimento:**
-    * **Adobe Illustrator / Inkscape:** Para edição e estruturação inicial do arquivo vetorial.
+    * **Adobe Illustrator:** Para edição e estruturação inicial do arquivo vetorial.
     * **SVGOMG:** Ferramenta online para otimização e minificação do código SVG.
     * **Visual Studio Code + Extensão Live Server:** Ambiente de desenvolvimento para servir os arquivos localmente e evitar erros de CORS.
 
@@ -50,6 +56,27 @@ A ideia central é fornecer um *template* funcional que possa ser facilmente int
     |-- ... (e assim por diante)
 
 ```
+## Estrutura para organizar o SVG dentro do VSCODE:
+
+```
+<svg id="mapa-exemplo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+<g id="regiao_03" class="regiao">
+    <polygon id="marica" class="bairro" points="(CODIGO DO VETOR)"/>
+    <polygon id="saquarema" class="bairro" points="(CODIGO DO VETOR)"/>
+    <polygon id="rio_bonito" class="bairro" points="(CODIGO DO VETOR)"/>
+    <polygon id="silva_jardim" class="bairro" points="(CODIGO DO VETOR)"/>
+    <polygon id="casimiro_de_abreu" class="bairro" points="(CODIGO DO VETOR)"/>
+    <polygon id=...
+</g>
+</svg>
+
+```
+### No Illusrator, como deve ser montado a estrutura para gerar o codigo corretamente:
+![image](https://github.com/user-attachments/assets/fd4de6f2-e7fd-4249-98bc-3802332c78d5)
+
+
+
+
 
 ## 🚀 Como Executar
 
