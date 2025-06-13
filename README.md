@@ -12,13 +12,8 @@ Este projeto é uma interface de mapa interativo do estado do Rio de Janeiro, pr
 
 A ideia central é fornecer um *template* funcional que possa ser facilmente integrado a um backend e a um banco de dados, permitindo que diferentes departamentos (TI, Contabilidade, Operações, etc.) visualizem seus dados de forma geoespacial.
 
-![Screenshot do Projeto](https://github.com/user-attachments/assets/fed41392-dbef-46ac-809e-3c21a6b5018f)
-
-
 
 https://github.com/user-attachments/assets/bf86824c-d0ce-48e2-9de1-192520954bd7
-
-
 
 
 ## ✨ Funcionalidades Atuais (Fase 1)
