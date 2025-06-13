@@ -1,220 +1,138 @@
-/* --- GERAL E FONTES --- */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
-* {
-    box-sizing: border-box;
-}
-
+/* --- ESTILOS GERAIS --- */
 body {
-    font-family: 'Roboto', sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
+    font-family: 'Arial', sans-serif;
     margin: 0;
-    padding: 2em;
-    text-align: center;
+    padding: 20px;
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
 }
 
-/* --- LAYOUT PRINCIPAL --- */
 h1 {
     color: #2c3e50;
-    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+p {
+    margin-bottom: 20px;
+    line-height: 1.6;
 }
 
 .container-principal {
     display: flex;
-    flex-wrap: wrap; 
-    gap: 30px; 
-    justify-content: center;
-    align-items: flex-start;
-    margin-top: 20px;
-    max-width: 1600px;
-    margin-left: auto;
-    margin-right: auto;
+    flex-direction: column; /* Em telas menores, colunas */
+    width: 100%;
+    max-width: 1200px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Para garantir que o border-radius funcione */
 }
 
-/* --- MAPA E PAINEL DE INFORMAÇÕES --- */
+@media (min-width: 768px) {
+    .container-principal {
+        flex-direction: row; /* Em telas maiores, linha */
+        height: calc(100vh - 80px); /* Ajusta a altura para ocupar a maior parte da tela */
+    }
+}
 
+/* --- ESTILOS DO MAPA --- */
 #mapa-container {
-    flex: 3; 
-    max-width: 900px; 
-    min-width: 400px; 
-    position: relative;
-    aspect-ratio: 4 / 3;
-    background-color: #ffffff;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    border-radius: 12px;
-    padding: 20px; /* Adicionado espaçamento interno aqui */
+position: relative;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fcfcfc;
+    min-height: 300px; /* Altura mínima para o mapa */
+    padding: 20px; /* ADICIONADO: Espaçamento interno para o mapa */
+    box-sizing: border-box; /* Garante que o padding não aumente o tamanho total */
+}
+
+@media (min-width: 768px) {
+    #mapa-container {
+        width: 65%; /* Ocupa 65% da largura em telas maiores */
+    }
 }
 
 #mapa-objeto {
     width: 100%;
     height: 100%;
-    display: block;
+    max-height: 100%; /* Garante que o SVG não transborde */
 }
 
+#btn-voltar {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    z-index: 100; /* Acima do mapa */
+    transition: background-color 0.2s ease;
+}
+
+#btn-voltar:hover {
+    background-color: #0056b3;
+}
+
+#btn-voltar.hidden {
+    display: none;
+}
+
+/* --- ESTILOS DO PAINEL DE INFORMAÇÕES --- */
 #info-painel {
-    flex: 1;
-    min-width: 340px;
-    max-width: 400px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 25px;
-    padding-bottom: 110px; /* Ajustado para um valor menor, liberando mais espaço. Antigo: 150px */
-    text-align: left;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    align-self: stretch; 
-    position: relative;
-    overflow-y: auto;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #eef2f5;
+    position: relative; /* Para o widget de clima (ainda que removido, mantém flexibilidade) */
     display: flex;
     flex-direction: column;
 }
 
+@media (min-width: 768px) {
+    #info-painel {
+        width: 35%; /* Ocupa 35% da largura em telas maiores */
+        border-left: 1px solid #e0e0e0;
+    }
+}
+
 #info-painel h2 {
+    color: #2c3e50;
     margin-top: 0;
-    color: #34495e;
-    border-bottom: 2px solid #e7eaf3;
-    padding-bottom: 10px;
+    margin-bottom: 5px; /* Ajuste: Reduzido o espaço abaixo do título */
+    font-size: 1.5em;
 }
 
 #info-painel p {
-    flex-grow: 1;
-}
-
-/* --- ELEMENTOS DE INTERATIVIDADE --- */
-
-#btn-voltar {
-    position: absolute;
-    top: 35px;
-    left: 35px;
-    z-index: 100;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #333;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 50px;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    transition: all 0.2s ease;
-}
-
-#btn-voltar:hover {
-    background-color: #f1f1f1;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-
-.hidden {
-    display: none !important;
-}
-
-/* --- ESTILOS DO WIDGET DE CLIMA --- */
-
-#weather-widget {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 5px 5px; 
-    padding-bottom: 10px;
-    border-top: 1px solid #e7eaf3;
-    text-align: center;
-    background-color: #f0f2f5;
-    border-bottom-left-radius: 12px;
-    border-bottom-right-radius: 12px;
-    box-shadow: 0 -5px 10px rgba(0,0,0,0.05);
-    z-index: 10;
-}
-
-#weather-widget h4 {
-    margin: 0 0 5px 0;
-    color: #0e0d0d;
-    font-size: 11px;
-}
-
-.clima-section-current {
-    background-color: #FFFFFF;
-    border-radius: 8px;
-    padding: 1px;
-    box-shadow: 0 2px 2px rgba(0,0,0,0.05);
-    display: flex;
-    flex-direction: column; /* Manter coluna para a seção como um todo (título e a linha de info) */
-    align-items: center;
-    gap: 3px; 
-}
-
-.clima-info {
-    display: flex; /* Transforma a linha do ícone/descrição/temperatura em flex */
-    align-items: center; /* Alinha verticalmente no centro */
-    justify-content: center; /* Centraliza horizontalmente o grupo de elementos */
-    gap: 0px; /* GARANTE ZERO ESPAÇAMENTO ENTRE ITENS FLEX. Ajuste se precisar de um pequeno espaço base. */
-    width: 100%; /* Ocupa a largura total da seção */
-    flex-wrap: nowrap; /* Impede que os itens quebrem a linha */
-}
-
-.clima-info img {
-    width: 50px; /* Ícone menor para ser mais discreto e ajudar a compactar. Experimente 40px se quiser menor. */
-    height: 50px;
-    margin-right: 0px; /* Garante que não haja margem extra à direita */
-}
-
-.clima-info .descricao {
-    margin: 0; /* Remove margens padrão */
-    font-size: 0.9em; /* Mantém o tamanho da fonte da descrição */
     color: #555;
-    white-space: nowrap; /* Tenta manter a descrição na mesma linha */
-    margin-right: 2px; /* Pequena margem para separar da barra */
+    font-size: 0.95em;
+    margin-top: 0; /* Ajuste: Removido o espaço acima do parágrafo */
+    margin-bottom: 10px; /* Mantenha algum espaço abaixo da descrição */
 }
 
-.clima-info .separador { /* NOVO ESTILO PARA A BARRA "/" */
-    margin: 0; /* Remove margens padrão */
-    padding: 0; /* Remove paddings padrão */
-    color: #555; /* Mesma cor do texto da descrição */
-    font-size: 0.9em; /* Mesma fonte da descrição */
-    margin-left: 2px; /* Pequena margem para separar da descrição */
-    margin-right: 2px; /* Pequena margem para separar da temperatura */
-    white-space: nowrap; /* Garante que a barra não quebre linha */
-}
-
-.clima-info .temperatura {
-    font-size: 1.6em; /* Tamanho da fonte da temperatura */
-    font-weight: 700;
-    margin: 0; /* Remove margens padrão */
-    color: #2c3e50;
-    white-space: nowrap; /* Tenta manter a temperatura na mesma linha */
-    margin-left: 2px; /* Pequena margem para aproximar da barra. Experimente 0px ou -2px se precisar colar mais. */
-}
-
-/* --- ESTILOS PARA ALERTAS METEOROLÓGICOS (permanece oculto) --- */
-#alerts-widget {
-    display: none;
-}
-
-/* --- ESTILOS PARA O EFEITO DE ZOOM NO SVG --- */
-#mapa-objeto svg .regiao {
-    transition: fill 0.3s ease-in-out, transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-    transform-origin: center center;
-    cursor: pointer;
-    will-change: transform, opacity;
-}
-
-#mapa-objeto svg .regiao:hover {
-    opacity: 0.8; 
-    fill: #FFD700 !important; 
-}
-
-#mapa-objeto svg .regiao.zoom-selecionado {
-    transform: scale(1.3);
-    opacity: 1;
-}
-
-#mapa-objeto svg .regiao.zoom-afastado {
-    transform: scale(0.9);
-    opacity: 0.2;
-}
-
-.regiao, .bairro {
-    stroke: #FFFFFF;
-    stroke-width: 0.5;
+/* --- ESTILOS PARA A CAIXA DE CONTEÚDO ADICIONAL (AINDA PRESENTE PARA FUTURO USO) --- */
+#conteudo-adicional-municipio {
+    border: 1px dashed #a0a0a0; /* Borda tracejada para indicar que é um placeholder */
+    padding: 10px;
+    margin-top: 15px; /* Espaço acima da caixa */
+    margin-bottom: 15px; /* Espaço abaixo da caixa */
+    border-radius: 8px;
+    background-color: #e0e9f0; /* Cor de fundo suave */
+    color: #333;
+    font-size: 0.9em;
+    text-align: center;
+    min-height: 80px; /* Altura mínima para visualização */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column; /* Se for ter vários itens dentro */
 }

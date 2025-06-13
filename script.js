@@ -25,56 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FUNÇÕES AUXILIARES ---
 
-    const buscarClimaAtual = async (nomeCidade, lat, lon) => {
-        const apiKey = 'e02fa8f962ee7d6b6a353ec5b1e79b7d'; // <-- Sua chave de API AQUI!
+    // A função buscarClimaAtual foi removida.
 
-        if (!apiKey) {
-            console.error("Erro: API Key não definida. Por favor, insira sua chave OpenWeatherMap.");
-            const widgetClimaErro = document.querySelector("#info-painel #weather-widget");
-            if (widgetClimaErro) widgetClimaErro.innerHTML = `<p style="font-size: 0.8em; color: #cc0000;">Erro na API: Chave não configurada.</p>`;
-            return;
-        }
-
-        const weatherWidget = document.querySelector("#info-painel #weather-widget");
-        const alertsWidget = document.querySelector("#info-painel #alerts-widget");
-        if (alertsWidget) alertsWidget.innerHTML = ''; 
-        if (!alertsWidget) console.log("Alerta: #alerts-widget não encontrado no DOM. Certifique-se de que está no HTML.");
-
-        if (!weatherWidget) return;
-
-        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=pt_br`;
-
-        try {
-            const resposta = await fetch(apiUrl);
-            if (!resposta.ok) {
-                const errorData = await resposta.json();
-                throw new Error(`Dados do clima não encontrados ou erro na API (${resposta.status}): ${errorData.message || 'Erro desconhecido'}`);
-            }
-            
-            const dadosClima = await resposta.json();
-
-            const tempAtual = Math.round(dadosClima.main.temp);
-            const descAtual = dadosClima.weather[0].description;
-            const iconeAtual = dadosClima.weather[0].icon;
-            const urlIconeAtual = `https://openweathermap.org/img/wn/${iconeAtual}@2x.png`;
-
-            // >>>>>> ALTERAÇÃO AQUI: A BARRA "/" AGORA É UM SPAN SEPARADO <<<<<<
-            weatherWidget.innerHTML = `
-                <h4>Clima em ${nomeCidade} (Agora)</h4>
-                <div class="clima-section-current">
-                    <div class="clima-info">
-                        <img src="${urlIconeAtual}" alt="${descAtual}">
-                        <p class="descricao">${descAtual.charAt(0).toUpperCase() + descAtual.slice(1)}</p>
-                        <span class="separador">/</span> <p class="temperatura">${tempAtual}°C</p>
-                    </div>
-                </div>
-            `;
-
-        } catch (erro) {
-            console.error("Erro ao buscar clima atual:", erro);
-            weatherWidget.innerHTML = `<p style="font-size: 0.8em; color: #cc0000;">Não foi possível carregar o clima atual. ${erro.message || ''}</p>`;
-        }
-    };
+    // A função exibirNomeNoMapa foi removida.
 
     const carregarMapaRegiao = (regiaoId) => {
         if (!regiaoId) return;
@@ -84,6 +37,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const resetarParaMapaGeral = () => {
         const svgElement = mapaObjeto.contentDocument ? mapaObjeto.contentDocument.querySelector('svg') : null;
+
+        // Limpeza de elementos de nome no mapa (mantido caso houvesse resquícios)
+        if (svgElement) {
+            const nomesMunicipiosNoMapa = svgElement.querySelectorAll('.nome-municipio-mapa');
+            nomesMunicipiosNoMapa.forEach(nome => nome.remove());
+        }
 
         if (svgElement && initialViewBox) {
             animateViewBox(svgElement, initialViewBox, 300);
@@ -114,26 +73,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (elementoSelecionado) {
             elementoSelecionado.classList.remove('selecionado');
+            // Limpeza de elementos de nome no mapa (mantido caso houvesse resquícios)
+            const svgDoc = mapaObjeto.contentDocument;
+            if (svgDoc) {
+                const nomesAnteriores = svgDoc.querySelectorAll('.nome-municipio-mapa');
+                nomesAnteriores.forEach(nome => nome.remove());
+            }
         }
         municipioElement.classList.add('selecionado');
         elementoSelecionado = municipioElement;
 
+        // HTML do painel de informações - APENAS DESCRIÇÃO E O NOVO CONTAINER
         if (dados && typeof dados.lat !== 'undefined' && typeof dados.lon !== 'undefined') {
             painelInfo.innerHTML = `
                 <h2>${dados.nome}</h2>
                 <p>${dados.descricao || "Nenhuma descrição disponível."}</p>
-                <div id="weather-widget">Carregando clima atual...</div> 
-                <div id="alerts-widget" style="display: none;"></div>
+                <div id="conteudo-adicional-municipio">
+                    <p>Espaço para conteúdo adicional (população, área, etc.)</p>
+                </div>
             `;
-            buscarClimaAtual(dados.nome, dados.lat, dados.lon);
+            // As chamadas para buscarClimaAtual e exibirNomeNoMapa foram removidas.
+
         } else {
             let nomeFormatado = municipioId.replace(/[-_]/g, " ").replace(/\b\w/g, l => l.toUpperCase());
             painelInfo.innerHTML = `
                 <h2>${nomeFormatado}</h2>
                 <p>Dados para este município (incluindo coordenadas) ainda não cadastrados ou incompletos.</p>
-                <div id="weather-widget"></div> 
-                <div id="alerts-widget" style="display: none;"></div>
+                <div id="conteudo-adicional-municipio">
+                    <p>Nenhum dado adicional disponível para este município.</p>
+                </div>
             `;
+            // Limpeza de elementos de nome no mapa (mantido caso houvesse resquícios)
+            const svgDoc = mapaObjeto.contentDocument;
+            if (svgDoc) {
+                const nomesAnteriores = svgDoc.querySelectorAll('.nome-municipio-mapa');
+                nomesAnteriores.forEach(nome => nome.remove());
+            }
         }
     };
 
@@ -176,10 +151,16 @@ document.addEventListener('DOMContentLoaded', () => {
             initialViewBox = svgElement.getAttribute('viewBox');
         }
 
+        // Limpar eventos anteriores para evitar duplicação em recargas
+        svgDoc.querySelectorAll('.regiao, .bairro').forEach(el => {
+            el.onclick = null; 
+            // Não há addEventListener específico para remover aqui se não foram adicionados
+        });
+
+
         const regioesNoMapa = svgDoc.querySelectorAll('.regiao');
         if (regioesNoMapa.length > 0) {
             regioesNoMapa.forEach(regiao => {
-                regiao.onclick = null; 
                 regiao.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const regiaoId = regiao.id;
@@ -210,7 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const municipiosNoMapa = svgDoc.querySelectorAll('.bairro');
         if (municipiosNoMapa.length > 0) {
             municipiosNoMapa.forEach(bairro => {
-                bairro.onclick = null;
                 bairro.addEventListener('click', (e) => {
                     e.stopPropagation();
                     exibirInfoMunicipio(bairro);
