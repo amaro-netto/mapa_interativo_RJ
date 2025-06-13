@@ -104,121 +104,84 @@ h1 {
     margin-top: 25px;
     padding-top: 15px;
     border-top: 1px solid #e7eaf3;
-    display: flex; /* Flexbox para organizar Hoje/Amanhã */
-    flex-wrap: wrap; /* Permite quebrar em linhas menores */
-    gap: 15px; /* Espaçamento entre as seções de clima */
-    justify-content: center; /* Centraliza as seções */
+    text-align: center;
 }
 
 #weather-widget h4 {
-    width: 100%; /* Ocupa a largura total para o título */
-    text-align: center;
     margin: 0 0 15px 0;
     color: #34495e;
     font-size: 1.1em;
 }
 
-.clima-section {
-    flex: 1; /* Faz as seções Hoje/Amanhã flexíveis */
-    min-width: 120px; /* Largura mínima para cada seção */
-    background-color: #f8f9fa;
+.clima-section-current {
+    background-color: #FFFFFF; /* Fundo branco para visibilidade do ícone */
     border-radius: 8px;
     padding: 10px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    text-align: center;
-}
-
-.clima-section h5 {
-    margin: 0 0 5px 0;
-    color: #555;
-    font-size: 0.9em;
+    display: flex;
+    flex-direction: column; /* Ícone, temperatura, descrição, ainda em coluna para o container */
+    align-items: center;
+    gap: 5px;
 }
 
 .clima-info {
-    display: flex;
-    flex-direction: column; /* Icone, temperatura, descrição em coluna */
-    align-items: center;
-    gap: 5px; /* Espaçamento entre os itens do clima */
+    display: flex; /* Agora, este container flexbox alinhará os itens na linha */
+    align-items: center; /* Centraliza verticalmente os itens */
+    justify-content: center; /* Centraliza horizontalmente os itens */
+    gap: 10px; /* Espaçamento entre o ícone e a temperatura */
+    width: 100%; /* Ocupa a largura total da seção */
 }
 
 .clima-info img {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
 }
 
 .clima-info .temperatura {
-    font-size: 1.6em; /* Um pouco menor para caber na seção */
+    font-size: 2.2em;
     font-weight: 700;
     margin: 0;
     color: #2c3e50;
 }
 
 .clima-info .descricao {
-    margin: 0;
-    font-size: 0.8em; /* Um pouco menor */
+    margin: 5px 0 0 0; /* Adicionei uma pequena margem superior para separar da temperatura/ícone */
+    font-size: 1em;
     color: #555;
     text-align: center;
 }
 
-/* --- ESTILOS PARA ALERTAS METEOROLÓGICOS --- */
+/* --- ESTILOS PARA ALERTAS METEOROLÓGICOS (permanece oculto) --- */
 #alerts-widget {
     margin-top: 25px;
     padding-top: 15px;
     border-top: 1px solid #e7eaf3;
+    display: none; /* Mantido oculto por padrão */
 }
 
-#alerts-widget h4 {
-    margin: 0 0 10px 0;
-    color: #c0392b; /* Cor mais chamativa para alertas */
-    font-size: 1.1em;
-    text-align: center;
-}
-
-.alerta-info {
-    background-color: #ffebeb; /* Fundo claro para alertas */
-    border: 1px solid #e74c3c; /* Borda para destaque */
-    border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 10px;
-    text-align: left;
-}
-
-.alerta-info .alerta-evento {
-    font-weight: 700;
-    color: #c0392b;
-    margin: 0 0 5px 0;
-}
-
-.alerta-info .alerta-descricao {
-    font-size: 0.9em;
-    color: #333;
-    margin: 0 0 5px 0;
-}
-
-.alerta-info .alerta-sender {
-    font-size: 0.8em;
-    color: #777;
-    text-align: right;
-    margin: 0;
-}
-
-/* --- NOVOS ESTILOS PARA O EFEITO DE ZOOM NO SVG --- */
+/* --- ESTILOS PARA O EFEITO DE ZOOM NO SVG --- */
 #mapa-objeto svg .regiao {
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transition: fill 0.3s ease-in-out, transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
     transform-origin: center center;
+    cursor: pointer;
+    will-change: transform, opacity;
+}
+
+#mapa-objeto svg .regiao:hover {
+    opacity: 0.8; 
+    fill: #FFD700 !important; 
 }
 
 #mapa-objeto svg .regiao.zoom-selecionado {
-    transform: scale(1.5); /* Ajuste o valor do zoom conforme o desejado */
+    transform: scale(1.3);
     opacity: 1;
 }
 
 #mapa-objeto svg .regiao.zoom-afastado {
-    transform: scale(0.8); /* Opcional: diminui as outras regiões */
-    opacity: 0.3;
+    transform: scale(0.9);
+    opacity: 0.2;
 }
 
-/* Estilo para a cor dos strokes dos mapas SVG (mantido) */
 .regiao, .bairro {
     stroke: #FFFFFF;
     stroke-width: 0.5;
