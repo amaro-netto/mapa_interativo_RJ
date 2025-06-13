@@ -58,14 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const iconeAtual = dadosClima.weather[0].icon;
             const urlIconeAtual = `https://openweathermap.org/img/wn/${iconeAtual}@2x.png`;
 
-            // ALTERAÇÃO AQUI: Nova ordem e formatação
+            // >>>>>> ALTERAÇÃO AQUI: A BARRA "/" AGORA É UM SPAN SEPARADO <<<<<<
             weatherWidget.innerHTML = `
                 <h4>Clima em ${nomeCidade} (Agora)</h4>
                 <div class="clima-section-current">
                     <div class="clima-info">
                         <img src="${urlIconeAtual}" alt="${descAtual}">
-                        <p class="descricao">${descAtual.charAt(0).toUpperCase() + descAtual.slice(1)} / </p>
-                        <p class="temperatura">${tempAtual}°C</p>
+                        <p class="descricao">${descAtual.charAt(0).toUpperCase() + descAtual.slice(1)}</p>
+                        <span class="separador">/</span> <p class="temperatura">${tempAtual}°C</p>
                     </div>
                 </div>
             `;

@@ -116,7 +116,7 @@ h1 {
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 1px 70px; 
+    padding: 5px 5px; 
     padding-bottom: 10px;
     border-top: 1px solid #e7eaf3;
     text-align: center;
@@ -137,7 +137,7 @@ h1 {
     background-color: #FFFFFF;
     border-radius: 8px;
     padding: 1px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 2px rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column; /* Manter coluna para a seção como um todo (título e a linha de info) */
     align-items: center;
@@ -147,33 +147,44 @@ h1 {
 .clima-info {
     display: flex; /* Transforma a linha do ícone/descrição/temperatura em flex */
     align-items: center; /* Alinha verticalmente no centro */
-    justify-content: center; /* Centraliza horizontalmente */
-    gap: 1px; /* Reduzido o espaço entre os elementos para que fiquem mais juntos */
-    width: 70%; /* Ocupa a largura total da seção */
-    flex-wrap: wrap; /* Permite quebrar linha se o conteúdo for muito longo em telas pequenas */
+    justify-content: center; /* Centraliza horizontalmente o grupo de elementos */
+    gap: 0px; /* GARANTE ZERO ESPAÇAMENTO ENTRE ITENS FLEX. Ajuste se precisar de um pequeno espaço base. */
+    width: 100%; /* Ocupa a largura total da seção */
+    flex-wrap: nowrap; /* Impede que os itens quebrem a linha */
 }
 
 .clima-info img {
-    width: 40px; /* Ícone menor para ser mais discreto */
-    height: 40px;
+    width: 50px; /* Ícone menor para ser mais discreto e ajudar a compactar. Experimente 40px se quiser menor. */
+    height: 50px;
     margin-right: 0px; /* Garante que não haja margem extra à direita */
 }
 
 .clima-info .descricao {
-    margin: 0; /* Remove a margem superior que havia */
+    margin: 0; /* Remove margens padrão */
     font-size: 0.9em; /* Mantém o tamanho da fonte da descrição */
     color: #555;
-    white-space: nowrap; /* Tenta manter a descrição e a temperatura na mesma linha */
+    white-space: nowrap; /* Tenta manter a descrição na mesma linha */
+    margin-right: 2px; /* Pequena margem para separar da barra */
+}
+
+.clima-info .separador { /* NOVO ESTILO PARA A BARRA "/" */
+    margin: 0; /* Remove margens padrão */
+    padding: 0; /* Remove paddings padrão */
+    color: #555; /* Mesma cor do texto da descrição */
+    font-size: 0.9em; /* Mesma fonte da descrição */
+    margin-left: 2px; /* Pequena margem para separar da descrição */
+    margin-right: 2px; /* Pequena margem para separar da temperatura */
+    white-space: nowrap; /* Garante que a barra não quebre linha */
 }
 
 .clima-info .temperatura {
     font-size: 1.6em; /* Tamanho da fonte da temperatura */
     font-weight: 700;
-    margin: 0; /* Remove margens */
+    margin: 0; /* Remove margens padrão */
     color: #2c3e50;
     white-space: nowrap; /* Tenta manter a temperatura na mesma linha */
+    margin-left: 2px; /* Pequena margem para aproximar da barra. Experimente 0px ou -2px se precisar colar mais. */
 }
-
 
 /* --- ESTILOS PARA ALERTAS METEOROLÓGICOS (permanece oculto) --- */
 #alerts-widget {
