@@ -16,7 +16,8 @@ A ideia central é fornecer um *template* funcional que possa ser facilmente int
 
 
 
-https://github.com/user-attachments/assets/94cb1a0e-580d-4684-aa37-83bc5ea23a72
+https://github.com/user-attachments/assets/bf86824c-d0ce-48e2-9de1-192520954bd7
+
 
 
 
