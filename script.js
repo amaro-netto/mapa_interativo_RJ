@@ -25,7 +25,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FUNÇÕES AUXILIARES ---
 
-    // As funções relacionadas ao clima e nome no mapa foram removidas para simplificar o projeto.
+    // NOVO: Função para ajustar o tamanho da fonte para caber no elemento
+    const adjustFontSizeToFit = (element, minFontSizePx = 8, maxAttempts = 30) => { // Reduzido minFontSizePx para 8, aumentado tentativas
+        if (!element) return;
+
+        let currentFontSize = parseFloat(window.getComputedStyle(element).fontSize);
+        const originalFontSize = currentFontSize; // Guardar o tamanho original para resetar
+        let attempts = 0;
+
+        // Resetar o estado inicial para permitir a medição precisa
+        element.style.fontSize = ''; // Limpa estilo inline se houver
+        element.style.whiteSpace = 'normal'; // Permite que o texto quebre linha (normal)
+        element.style.overflow = 'hidden'; // Esconde o transbordo (a fonte será ajustada em vez de criar barra de rolagem)
+
+        // Loop para reduzir o tamanho da fonte até que o texto caiba
+        // ou até atingir o tamanho mínimo / número máximo de tentativas
+        while (element.scrollHeight > element.clientHeight && currentFontSize > minFontSizePx && attempts < maxAttempts) {
+            currentFontSize -= 0.5; // Reduz em 0.5px
+            element.style.fontSize = `${currentFontSize}px`;
+            attempts++;
+        }
+
+        // Se, mesmo após as tentativas, ainda houver transbordamento,
+        // um aviso pode ser útil para depuração, mas o layout não será quebrado.
+        if (element.scrollHeight > element.clientHeight) {
+            console.warn(`[adjustFontSizeToFit] O texto ainda transborda após ${attempts} tentativas. Elemento:`, element);
+            // Poderíamos até definir overflow: auto aqui como último recurso, mas o pedido é para não alterar o layout.
+        }
+    };
 
     const carregarMapaRegiao = (regiaoId) => {
         if (!regiaoId) return;
@@ -36,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetarParaMapaGeral = () => {
         const svgElement = mapaObjeto.contentDocument ? mapaObjeto.contentDocument.querySelector('svg') : null;
 
-        // Limpeza de elementos de nome no mapa (mantido caso houvesse resquícios de versões anteriores)
         if (svgElement) {
             const nomesMunicipiosNoMapa = svgElement.querySelectorAll('.nome-municipio-mapa');
             nomesMunicipiosNoMapa.forEach(nome => nome.remove());
@@ -71,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (elementoSelecionado) {
             elementoSelecionado.classList.remove('selecionado');
-            // Limpeza de elementos de nome no mapa (mantido caso houvesse resquícios de versões anteriores)
             const svgDoc = mapaObjeto.contentDocument;
             if (svgDoc) {
                 const nomesAnteriores = svgDoc.querySelectorAll('.nome-municipio-mapa');
@@ -81,31 +106,38 @@ document.addEventListener('DOMContentLoaded', () => {
         municipioElement.classList.add('selecionado');
         elementoSelecionado = municipioElement;
 
-        // HTML do painel de informações - APENAS DESCRIÇÃO E O NOVO CONTAINER
-        if (dados && typeof dados.lat !== 'undefined' && typeof dados.lon !== 'undefined') {
+        // HTML do painel de informações
+        if (dados && typeof dados.lat !== 'undefined' && typeof dados.lat !== 'undefined') { // Mantenha lat/lon como condição para dados
             painelInfo.innerHTML = `
                 <h2>${dados.nome}</h2>
-                <p>${dados.descricao || "Nenhuma descrição disponível."}</p>
+                <p id="municipio-descricao-texto">${dados.descricao || "Nenhuma descrição disponível."}</p>
                 <div id="conteudo-adicional-municipio">
-                    <p>Espaço para conteúdo adicional.)</p>
+                    <p>Espaço para conteúdo adicional (população, área, etc.)</p>
                 </div>
             `;
-            // As chamadas para buscarClimaAtual e exibirNomeNoMapa foram removidas.
+            // Chamar a função de ajuste de fonte APÓS o HTML ser inserido
+            const descriptionElement = document.getElementById('municipio-descricao-texto');
+            if (descriptionElement) {
+                // Pequeno atraso para garantir que o DOM renderize o texto antes de medir
+                setTimeout(() => {
+                    adjustFontSizeToFit(descriptionElement, 8, 30); // Min. 8px, Max. 30 tentativas de ajuste
+                }, 50); 
+            }
 
         } else {
             let nomeFormatado = municipioId.replace(/[-_]/g, " ").replace(/\b\w/g, l => l.toUpperCase());
             painelInfo.innerHTML = `
                 <h2>${nomeFormatado}</h2>
-                <p>Dados para este município (incluindo coordenadas) ainda não cadastrados ou incompletos.</p>
-                <div id="conteudo-adicional-municipio">
+                <p id="municipio-descricao-texto">Dados para este município ainda não cadastrados.</p> <div id="conteudo-adicional-municipio">
                     <p>Nenhum dado adicional disponível para este município.</p>
                 </div>
             `;
-            // Limpeza de elementos de nome no mapa (mantido caso houvesse resquícios de versões anteriores)
-            const svgDoc = mapaObjeto.contentDocument;
-            if (svgDoc) {
-                const nomesAnteriores = svgDoc.querySelectorAll('.nome-municipio-mapa');
-                nomesAnteriores.forEach(nome => nome.remove());
+            // Chamar a função de ajuste de fonte também para o texto padrão
+            const descriptionElement = document.getElementById('municipio-descricao-texto');
+            if (descriptionElement) {
+                setTimeout(() => {
+                    adjustFontSizeToFit(descriptionElement, 8, 30);
+                }, 50);
             }
         }
     };
@@ -152,7 +184,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Limpar eventos anteriores para evitar duplicação em recargas
         svgDoc.querySelectorAll('.regiao, .bairro').forEach(el => {
             el.onclick = null; 
-            // Não há addEventListener específico para remover aqui se não foram adicionados
         });
 
 

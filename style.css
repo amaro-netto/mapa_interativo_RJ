@@ -35,9 +35,8 @@ p {
 @media (min-width: 768px) {
     .container-principal {
         flex-direction: row;
-        /* REMOVIDO: height: calc(100vh - 80px); - Permitir que o aspect-ratio controle a altura */
         max-height: calc(100vh - 80px); /* Limita a altura máxima para não transbordar a tela */
-        aspect-ratio: 16 / 9; /* NOVO: Define a proporção de 16:9 para o container principal */
+        aspect-ratio: 16 / 9; /* Define a proporção de 16:9 para o container principal */
         align-self: center; /* Centraliza o container principal se o body for um flex container */
     }
 }
@@ -99,46 +98,53 @@ p {
     position: relative; 
     display: flex;
     flex-direction: column;
-    overflow-y: auto; /* NOVO: Adiciona barra de rolagem vertical se o conteúdo for muito longo */
+    overflow-y: auto; /* Adiciona barra de rolagem vertical se o conteúdo for muito longo */
 }
 
 @media (min-width: 768px) {
     #info-painel {
         width: 35%; /* Ocupa 35% da largura em telas maiores */
         border-left: 1px solid #e0e0e0;
-        /* Se o weather-widget estiver no final e for absoluto, pode precisar de padding-bottom aqui */
-        /* padding-bottom: 80px; /* Exemplo: se o widget de clima tiver 80px de altura */
     }
 }
 
 #info-painel h2 {
     color: #2c3e50;
     margin-top: 0;
-    margin-bottom: 5px; /* Ajuste: Reduzido o espaço abaixo do título */
+    margin-bottom: 5px; 
     font-size: 1.5em;
+    border-bottom: 1px solid #ccc; /* Traçado abaixo do nome do município */
+    padding-bottom: 8px; /* Espaçamento entre o nome e o traçado */
 }
 
 #info-painel p {
     color: #555;
-    font-size: 0.95em;
-    margin-top: 0; /* Ajuste: Removido o espaço acima do parágrafo */
-    margin-bottom: 10px; /* Mantenha algum espaço abaixo da descrição */
+    font-size: 0.95em; /* Tamanho inicial da fonte. Será ajustado via JS */
+    margin-top: 10px; /* Espaço entre o traçado do h2 e a descrição */
+    margin-bottom: 10px; 
+    
+    /* NOVO: Propriedades para travar em 2 linhas */
+    line-height: 1.4em; /* Define a altura de cada linha. Ajuste este valor se quiser mais/menos espaçamento entre linhas. */
+    max-height: 2.8em; /* 2 linhas * 1.4em (line-height) = altura máxima de 2 linhas. */
+    min-height: 2.8em; /* Garante que a caixa tenha pelo menos 2 linhas de altura, mesmo com texto curto. */
+    overflow: hidden; /* Oculta o que transborda. A fonte será ajustada para caber. */
+    white-space: normal; /* Permite que o texto quebre linha. */
 }
 
-/* --- ESTILOS PARA A CAIXA DE CONTEÚDO ADICIONAL (AINDA PRESENTE PARA FUTURO USO) --- */
+/* --- ESTILOS PARA A CAIXA DE CONTEÚDO ADICIONAL --- */
 #conteudo-adicional-municipio {
     border: 1px dashed #a0a0a0; /* Borda tracejada para indicar que é um placeholder */
     padding: 10px;
-    margin-top: 15px; /* Espaço acima da caixa */
-    margin-bottom: 15px; /* Espaço abaixo da caixa */
+    margin-top: 15px; /* Espaço acima da caixa para separá-la da descrição */
+    margin-bottom: 15px; 
     border-radius: 8px;
-    background-color: #e0e9f0; /* Cor de fundo suave */
+    background-color: #e0e9f0; 
     color: #333;
     font-size: 0.9em;
     text-align: center;
-    min-height: 80px; /* Altura mínima para visualização */
+    min-height: 80px; 
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column; /* Se for ter vários itens dentro */
+    flex-direction: column;
 }
