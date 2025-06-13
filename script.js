@@ -279,9 +279,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Após a animação, carrega o SVG da região detalhada
                     setTimeout(() => {
                         carregarMapaRegiao(regiaoId);
-                        // O CSS do mapa geral já lida com a opacidade das outras regiões,
-                        // mas a opacidade 0 imediata ajuda na transição visual antes da troca do SVG.
-                        // Não precisamos remover classes de zoom aqui, pois o SVG será substituído.
                     }, 300); // Tempo igual à duração da animação
                 });
             });
