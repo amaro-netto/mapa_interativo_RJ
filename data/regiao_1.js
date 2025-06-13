@@ -25,4 +25,28 @@ const dados_regiao_1 = {
         lat: -22.7876,
         lon: -43.4144
    },
+   duque_de_caxias: {
+        nome: "Duque de Caxias",
+        descricao: "Um dos maiores municípios da Baixada Fluminense e um importante polo industrial e comercial do estado do Rio de Janeiro.",
+        lat: -22.7936,
+        lon: -43.3106
+    },
+    belford_roxo: {
+        nome: "Belford Roxo",
+        descricao: "Localizado na Baixada Fluminense, é um município densamente populoso, com forte atividade comercial local.",
+        lat: -22.7601,
+        lon: -43.3999
+    },
+    sao_joao_de_meriti: {
+        nome: "São João de Meriti",
+        descricao: "Conhecida como a 'Cidade dos Shopping Centers' ou 'Portal da Baixada', é um importante centro comercial e de serviços.",
+        lat: -22.7915,
+        lon: -43.3703
+    },
+    nilopolis: {
+        nome: "Nilópolis",
+        descricao: "Pequeno, mas vibrante município da Baixada Fluminense, famoso por sua escola de samba, a Beija-Flor.",
+        lat: -22.8062,
+        lon: -43.4187
+    },
 };
