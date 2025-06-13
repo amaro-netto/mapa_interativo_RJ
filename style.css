@@ -29,26 +29,29 @@ p {
     background-color: #fff;
     border-radius: 15px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    overflow: hidden; /* Para garantir que o border-radius funcione */
+    overflow: hidden; /* Para garantir que o border-radius funcione e esconder overflow geral */
 }
 
 @media (min-width: 768px) {
     .container-principal {
-        flex-direction: row; /* Em telas maiores, linha */
-        height: calc(100vh - 80px); /* Ajusta a altura para ocupar a maior parte da tela */
+        flex-direction: row;
+        /* REMOVIDO: height: calc(100vh - 80px); - Permitir que o aspect-ratio controle a altura */
+        max-height: calc(100vh - 80px); /* Limita a altura máxima para não transbordar a tela */
+        aspect-ratio: 16 / 9; /* NOVO: Define a proporção de 16:9 para o container principal */
+        align-self: center; /* Centraliza o container principal se o body for um flex container */
     }
 }
 
 /* --- ESTILOS DO MAPA --- */
 #mapa-container {
-position: relative;
+    position: relative;
     flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: #fcfcfc;
     min-height: 300px; /* Altura mínima para o mapa */
-    padding: 20px; /* ADICIONADO: Espaçamento interno para o mapa */
+    padding: 20px; /* Espaçamento interno para o mapa */
     box-sizing: border-box; /* Garante que o padding não aumente o tamanho total */
 }
 
@@ -93,15 +96,18 @@ position: relative;
     padding: 20px;
     box-sizing: border-box;
     background-color: #eef2f5;
-    position: relative; /* Para o widget de clima (ainda que removido, mantém flexibilidade) */
+    position: relative; 
     display: flex;
     flex-direction: column;
+    overflow-y: auto; /* NOVO: Adiciona barra de rolagem vertical se o conteúdo for muito longo */
 }
 
 @media (min-width: 768px) {
     #info-painel {
         width: 35%; /* Ocupa 35% da largura em telas maiores */
         border-left: 1px solid #e0e0e0;
+        /* Se o weather-widget estiver no final e for absoluto, pode precisar de padding-bottom aqui */
+        /* padding-bottom: 80px; /* Exemplo: se o widget de clima tiver 80px de altura */
     }
 }
 

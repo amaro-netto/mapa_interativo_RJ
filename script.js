@@ -25,9 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FUNÇÕES AUXILIARES ---
 
-    // A função buscarClimaAtual foi removida.
-
-    // A função exibirNomeNoMapa foi removida.
+    // As funções relacionadas ao clima e nome no mapa foram removidas para simplificar o projeto.
 
     const carregarMapaRegiao = (regiaoId) => {
         if (!regiaoId) return;
@@ -38,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetarParaMapaGeral = () => {
         const svgElement = mapaObjeto.contentDocument ? mapaObjeto.contentDocument.querySelector('svg') : null;
 
-        // Limpeza de elementos de nome no mapa (mantido caso houvesse resquícios)
+        // Limpeza de elementos de nome no mapa (mantido caso houvesse resquícios de versões anteriores)
         if (svgElement) {
             const nomesMunicipiosNoMapa = svgElement.querySelectorAll('.nome-municipio-mapa');
             nomesMunicipiosNoMapa.forEach(nome => nome.remove());
@@ -73,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (elementoSelecionado) {
             elementoSelecionado.classList.remove('selecionado');
-            // Limpeza de elementos de nome no mapa (mantido caso houvesse resquícios)
+            // Limpeza de elementos de nome no mapa (mantido caso houvesse resquícios de versões anteriores)
             const svgDoc = mapaObjeto.contentDocument;
             if (svgDoc) {
                 const nomesAnteriores = svgDoc.querySelectorAll('.nome-municipio-mapa');
@@ -89,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h2>${dados.nome}</h2>
                 <p>${dados.descricao || "Nenhuma descrição disponível."}</p>
                 <div id="conteudo-adicional-municipio">
-                    <p>Espaço para conteúdo adicional (população, área, etc.)</p>
+                    <p>Espaço para conteúdo adicional.)</p>
                 </div>
             `;
             // As chamadas para buscarClimaAtual e exibirNomeNoMapa foram removidas.
@@ -103,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>Nenhum dado adicional disponível para este município.</p>
                 </div>
             `;
-            // Limpeza de elementos de nome no mapa (mantido caso houvesse resquícios)
+            // Limpeza de elementos de nome no mapa (mantido caso houvesse resquícios de versões anteriores)
             const svgDoc = mapaObjeto.contentDocument;
             if (svgDoc) {
                 const nomesAnteriores = svgDoc.querySelectorAll('.nome-municipio-mapa');
