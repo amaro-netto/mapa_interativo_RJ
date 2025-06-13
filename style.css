@@ -116,8 +116,8 @@ h1 {
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 10px 25px; /* Reduzido padding superior/inferior para 10px. Antigo: 15px 25px */
-    padding-bottom: 15px; /* Reduzido padding-bottom para 15px. Antigo: 25px */
+    padding: 10px 25px; 
+    padding-bottom: 15px;
     border-top: 1px solid #e7eaf3;
     text-align: center;
     background-color: #f0f2f5;
@@ -128,48 +128,52 @@ h1 {
 }
 
 #weather-widget h4 {
-    margin: 0 0 10px 0; /* Reduzido a margem inferior para 10px. Antigo: 15px */
+    margin: 0 0 10px 0;
     color: #34495e;
-    font-size: 1em; /* Reduzido um pouco o tamanho da fonte. Antigo: 1.1em */
+    font-size: 1em;
 }
 
 .clima-section-current {
     background-color: #FFFFFF;
     border-radius: 8px;
-    padding: 8px; /* Reduzido padding interno para 8px. Antigo: 10px */
+    padding: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Manter coluna para a seção como um todo (título e a linha de info) */
     align-items: center;
-    gap: 3px; /* Reduzido o espaço entre os elementos. Antigo: 5px */
+    gap: 3px; 
 }
 
 .clima-info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px; /* Reduzido o espaço entre o ícone e a temperatura. Antigo: 10px */
-    width: 100%;
+    display: flex; /* Transforma a linha do ícone/descrição/temperatura em flex */
+    align-items: center; /* Alinha verticalmente no centro */
+    justify-content: center; /* Centraliza horizontalmente */
+    gap: 5px; /* Reduzido o espaço entre os elementos para que fiquem mais juntos */
+    width: 100%; /* Ocupa a largura total da seção */
+    flex-wrap: wrap; /* Permite quebrar linha se o conteúdo for muito longo em telas pequenas */
 }
 
 .clima-info img {
-    width: 50px; /* Reduzido o tamanho do ícone. Antigo: 60px */
-    height: 50px;
-}
-
-.clima-info .temperatura {
-    font-size: 1.8em; /* Reduzido o tamanho da fonte da temperatura. Antigo: 2.2em */
-    font-weight: 700;
-    margin: 0;
-    color: #2c3e50;
+    width: 40px; /* Ícone menor para ser mais discreto */
+    height: 40px;
+    margin-right: 0px; /* Garante que não haja margem extra à direita */
 }
 
 .clima-info .descricao {
-    margin: 3px 0 0 0; /* Reduzido a margem superior. Antigo: 5px */
-    font-size: 0.9em; /* Reduzido o tamanho da fonte da descrição. Antigo: 1em */
+    margin: 0; /* Remove a margem superior que havia */
+    font-size: 0.9em; /* Mantém o tamanho da fonte da descrição */
     color: #555;
-    text-align: center;
+    white-space: nowrap; /* Tenta manter a descrição e a temperatura na mesma linha */
 }
+
+.clima-info .temperatura {
+    font-size: 1.6em; /* Tamanho da fonte da temperatura */
+    font-weight: 700;
+    margin: 0; /* Remove margens */
+    color: #2c3e50;
+    white-space: nowrap; /* Tenta manter a temperatura na mesma linha */
+}
+
 
 /* --- ESTILOS PARA ALERTAS METEOROLÓGICOS (permanece oculto) --- */
 #alerts-widget {

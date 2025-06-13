@@ -25,13 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- FUNÇÕES AUXILIARES ---
 
-    // Função para buscar apenas o clima atual (Current Weather Data API)
     const buscarClimaAtual = async (nomeCidade, lat, lon) => {
-        // ATENÇÃO: Sua chave de API agora está aqui no script.js.
-        // Isso NÃO é seguro para produção, pois ela ficará visível no navegador.
-        // Use apenas para desenvolvimento/testes locais.
         const apiKey = 'e02fa8f962ee7d6b6a353ec5b1e79b7d'; // <-- Sua chave de API AQUI!
-        // Por favor, substitua '6d566ea94a38beedcce0fa62a1f164edI' pela sua chave real e válida.
 
         if (!apiKey) {
             console.error("Erro: API Key não definida. Por favor, insira sua chave OpenWeatherMap.");
@@ -41,15 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const weatherWidget = document.querySelector("#info-painel #weather-widget");
-        // Remove completamente o widget de alertas, pois não é suportado por esta API
         const alertsWidget = document.querySelector("#info-painel #alerts-widget");
         if (alertsWidget) alertsWidget.innerHTML = ''; 
         if (!alertsWidget) console.log("Alerta: #alerts-widget não encontrado no DOM. Certifique-se de que está no HTML.");
 
-
         if (!weatherWidget) return;
 
-        // Endpoint da API de Clima Atual
         const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=pt_br`;
 
         try {
@@ -61,19 +53,19 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const dadosClima = await resposta.json();
 
-            // --- CLIMA ATUAL ---
             const tempAtual = Math.round(dadosClima.main.temp);
             const descAtual = dadosClima.weather[0].description;
             const iconeAtual = dadosClima.weather[0].icon;
             const urlIconeAtual = `https://openweathermap.org/img/wn/${iconeAtual}@2x.png`;
 
+            // ALTERAÇÃO AQUI: Nova ordem e formatação
             weatherWidget.innerHTML = `
                 <h4>Clima em ${nomeCidade} (Agora)</h4>
                 <div class="clima-section-current">
                     <div class="clima-info">
                         <img src="${urlIconeAtual}" alt="${descAtual}">
+                        <p class="descricao">${descAtual.charAt(0).toUpperCase() + descAtual.slice(1)} / </p>
                         <p class="temperatura">${tempAtual}°C</p>
-                        <p class="descricao">${descAtual.charAt(0).toUpperCase() + descAtual.slice(1)}</p>
                     </div>
                 </div>
             `;
@@ -131,7 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h2>${dados.nome}</h2>
                 <p>${dados.descricao || "Nenhuma descrição disponível."}</p>
                 <div id="weather-widget">Carregando clima atual...</div> 
-                <div id="alerts-widget" style="display: none;"></div> `;
+                <div id="alerts-widget" style="display: none;"></div>
+            `;
             buscarClimaAtual(dados.nome, dados.lat, dados.lon);
         } else {
             let nomeFormatado = municipioId.replace(/[-_]/g, " ").replace(/\b\w/g, l => l.toUpperCase());
