@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Nova função para buscar clima com lat/lon da One Call API 3.0
     const buscarClimaEPrevisao = async (nomeCidade, lat, lon) => {
         // ATENÇÃO: Substitua pela sua chave pessoal da API.
-        const apiKey = '6d566ea94a38beedcce0fa62a1f164edI'; // Sua chave do OpenWeatherMap
+        const apiKey = '6d566ea94a38beedcce0fa62a1f164ed'; // Sua chave do OpenWeatherMap
         const weatherWidget = document.querySelector("#info-painel #weather-widget");
         const alertsWidget = document.querySelector("#info-painel #alerts-widget");
 
