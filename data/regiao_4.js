@@ -1,64 +1,58 @@
 // data/regiao_4.js
 
 const dados_regiao_4 = {
-    cabo_frio: {
-        nome: "Cabo Frio",
-        descricao: "Um dos principais destinos turísticos da Região dos Lagos, famosa por suas praias de águas claras e dunas de areia branca.",
-        lat: -22.8837,
-        lon: -42.0202
+    quatis: {
+        nome: "Quatis",
+        descricao: "Cidade com forte tradição rural e festas populares, localizada às margens do Rio Paraíba do Sul.",
+        lat: -22.4037,
+        lon: -44.0955
     },
-    arraial_do_cabo: {
-        nome: "Arraial do Cabo",
-        descricao: "Conhecido como o 'Caribe Brasileiro', possui praias paradisíacas com águas cristalinas e vida marinha exuberante.",
-        lat: -22.9621,
-        lon: -42.0275
+    itatiaia: {
+        nome: "Itatiaia",
+        descricao: "Famosa por abrigar o primeiro Parque Nacional do Brasil, o Parque Nacional de Itatiaia, com paisagens montanhosas e rica biodiversidade.",
+        lat: -22.4939,
+        lon: -44.5779
     },
-    buzios: {
-        nome: "Armação dos Búzios",
-        descricao: "Famosa estância balneária, com praias charmosas, vida noturna agitada e alto padrão turístico.",
-        lat: -22.7533,
-        lon: -41.8765
+    resende: {
+        nome: "Resende",
+        descricao: "Importante polo industrial e militar, abriga a AMAN (Academia Militar das Agulhas Negras) e indústrias automotivas.",
+        lat: -22.4695,
+        lon: -44.4754
     },
-    sao_pedro_da_aldeia: {
-        nome: "São Pedro da Aldeia",
-        descricao: "Cidade às margens da Lagoa de Araruama, com forte ligação com a Marinha e a pesca.",
-        lat: -22.8427,
-        lon: -42.0834
+    rio_claro: {
+        nome: "Rio Claro",
+        descricao: "Município com grande área de Mata Atlântica preservada, cachoeiras e potencial para o turismo ecológico.",
+        lat: -22.7099,
+        lon: -44.1352
     },
-    iguaba_grande: {
-        nome: "Iguaba Grande",
-        descricao: "Localizada na Região dos Lagos, com paisagens tranquilas e atividades náuticas na lagoa.",
-        lat: -22.8252,
-        lon: -42.2285
+    barra_mansa: {
+        nome: "Barra Mansa",
+        descricao: "Importante centro siderúrgico e ferroviário, com forte comércio e serviços na região Sul Fluminense.",
+        lat: -22.5458,
+        lon: -44.1738
     },
-    araruama: {
-        nome: "Araruama",
-        descricao: "Abriga a maior lagoa hipersalina do mundo, a Lagoa de Araruama, e possui praias e cultura local.",
-        lat: -22.8711,
-        lon: -42.3411
+    pirai: {
+        nome: "Piraí",
+        descricao: "Cidade do Sul Fluminense com belas paisagens rurais, represas e fazendas históricas, conhecida pelo clima ameno.",
+        lat: -22.6105,
+        lon: -43.9103
     },
-    saquarema: {
-        nome: "Saquarema",
-        descricao: "A 'Capital Nacional do Surf', conhecida por suas ondas perfeitas, o Templo do Rock e a Igreja de Nossa Senhora de Nazareth.",
-        lat: -22.9238,
-        lon: -42.5029
+    porto_real: {
+        nome: "Porto Real",
+        descricao: "Município jovem e de forte crescimento industrial, com foco na indústria automobilística e de autopeças.",
+        lat: -22.4287,
+        lon: -44.0252
     },
-    marica: {
-        nome: "Maricá",
-        descricao: "Município em rápido crescimento, com praias, lagoas e grande investimento em infraestrutura.",
-        lat: -22.9127,
-        lon: -42.8227
+    pinheiral: {
+        nome: "Pinheiral",
+        descricao: "Pequeno município do Sul Fluminense, com tranquilidade e vocação para o turismo rural e a agricultura familiar.",
+        lat: -22.5029,
+        lon: -43.993
     },
-    niteroi: {
-        nome: "Niterói",
-        descricao: "Cidade com belas praias, o Museu de Arte Contemporânea (MAC) e vista panorâmica da Baía de Guanabara.",
-        lat: -22.8941,
-        lon: -43.1009
-    },
-    rio_de_janeiro: { // Incluído aqui por proximidade, se necessário.
-        nome: "Rio de Janeiro",
-        descricao: "A 'Cidade Maravilhosa', capital do estado.",
-        lat: -22.9068,
-        lon: -43.1729
+    volta_redonda: {
+        nome: "Volta Redonda",
+        descricao: "Conhecida como a 'Cidade do Aço', abriga a Companhia Siderúrgica Nacional (CSN) e possui grande importância industrial para o Brasil.",
+        lat: -22.5186,
+        lon: -44.1037
     }
 };
