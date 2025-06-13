@@ -1,7 +1,7 @@
 <svg id="regiao_08" data-name="regiao 08" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 953.4 671.1">
     <style>
         .bairro {
-            fill: #d193f5; /* Cor base da Região 08 (roxo claro) */
+            fill: #93d5f5; /* Cor base da Região 08 (roxo claro) */
             stroke: #FFFFFF;
             stroke-width: 0.5;
             transition: fill 0.2s ease-in-out;
