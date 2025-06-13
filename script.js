@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Combina todos os dados de municípios de todas as regiões
     const dadosMunicipios = Object.assign({},
         typeof dados_regiao_1 !== 'undefined' ? dados_regiao_1 : {},
         typeof dados_regiao_2 !== 'undefined' ? dados_regiao_2 : {},
@@ -21,21 +20,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const painelInfo = document.getElementById('info-painel');
     const btnVoltar = document.getElementById('btn-voltar');
 
-    let elementoSelecionado = null; // Guarda o elemento (município) atualmente selecionado
-    let eventosAtivos = null; // Controla os event listeners para evitar duplicação
+    let elementoSelecionado = null;
+    let initialViewBox = null; // Armazenará a viewBox inicial do mapa geral
 
     // --- FUNÇÕES AUXILIARES ---
 
-    // Nova função para buscar clima com lat/lon da One Call API 3.0
     const buscarClimaEPrevisao = async (nomeCidade, lat, lon) => {
-        // ATENÇÃO: Substitua pela sua chave pessoal da API.
-        const apiKey = '6d566ea94a38beedcce0fa62a1f164ed'; // Sua chave do OpenWeatherMap
+        const apiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&appid=${OPENWEATHER_API_KEY}&units=metric&lang=pt_br`;
         const weatherWidget = document.querySelector("#info-painel #weather-widget");
         const alertsWidget = document.querySelector("#info-painel #alerts-widget");
 
         if (!weatherWidget) return;
 
-        // One Call API 3.0 - Exclui dados por minuto e por hora para otimizar
         const apiUrl = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=minutely,hourly&appid=${apiKey}&units=metric&lang=pt_br`;
 
         try {
@@ -44,22 +40,19 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const dadosClima = await resposta.json();
 
-            // CLIMA ATUAL (HOJE)
             const current = dadosClima.current;
             const tempAtual = Math.round(current.temp);
             const descAtual = current.weather[0].description;
             const iconeAtual = current.weather[0].icon;
             const urlIconeAtual = `https://openweathermap.org/img/wn/${iconeAtual}@2x.png`;
 
-            // PREVISÃO PARA AMANHÃ (daily[1] pois daily[0] é hoje)
-            const tomorrow = dadosClima.daily[1]; // Pegar o dia seguinte
+            const tomorrow = dadosClima.daily[1];
             const tempMinAmanha = Math.round(tomorrow.temp.min);
             const tempMaxAmanha = Math.round(tomorrow.temp.max);
             const descAmanha = tomorrow.weather[0].description;
             const iconeAmanha = tomorrow.weather[0].icon;
             const urlIconeAmanha = `https://openweathermap.org/img/wn/${iconeAmanha}@2x.png`;
 
-            // Renderiza o clima atual e a previsão
             weatherWidget.innerHTML = `
                 <h4>Clima em ${nomeCidade}</h4>
                 <div class="clima-section">
@@ -80,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
 
-            // ALERTAS METEOROLÓGICOS
             if (alertsWidget) {
                 if (dadosClima.alerts && dadosClima.alerts.length > 0) {
                     alertsWidget.innerHTML = '<h4>Alertas Meteorológicos</h4>';
@@ -94,14 +86,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         `;
                     });
                 } else {
-                    alertsWidget.innerHTML = ''; // Limpa se não houver alertas
+                    alertsWidget.innerHTML = '';
                 }
             }
 
         } catch (erro) {
             console.error("Erro no widget de clima/previsão:", erro);
             weatherWidget.innerHTML = `<p style="font-size: 0.8em; color: #777;">Não foi possível carregar o clima e previsão.</p>`;
-            if (alertsWidget) alertsWidget.innerHTML = ''; // Limpa alertas em caso de erro
+            if (alertsWidget) alertsWidget.innerHTML = '';
         }
     };
 
@@ -112,12 +104,40 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const resetarParaMapaGeral = () => {
-        mapaObjeto.data = 'svgs/mapa-geral.svg';
-        btnVoltar.classList.add('hidden');
-        painelInfo.innerHTML = '<h2>Selecione uma Região</h2><p>Clique em uma área do mapa para começar a explorar.</p>';
-        if (elementoSelecionado) {
-            elementoSelecionado.classList.remove('selecionado');
-            elementoSelecionado = null;
+        // Se houver uma viewBox inicial salva, restaura ela com animação
+        if (initialViewBox) {
+            const svgElement = mapaObjeto.contentDocument.querySelector('svg');
+            if (svgElement) {
+                animateViewBox(svgElement, initialViewBox, 300); // Anima de volta
+                // Define um timeout para carregar o mapa-geral.svg DEPOIS da animação
+                setTimeout(() => {
+                    mapaObjeto.data = 'svgs/mapa-geral.svg';
+                    btnVoltar.classList.add('hidden');
+                    painelInfo.innerHTML = '<h2>Selecione uma Região</h2><p>Clique em uma área do mapa para começar a explorar.</p>';
+                    if (elementoSelecionado) {
+                        elementoSelecionado.classList.remove('selecionado');
+                        elementoSelecionado = null;
+                    }
+                }, 300); // Tempo da animação
+            } else {
+                // Fallback: se não encontrar o SVG, carrega direto (sem animação de retorno)
+                mapaObjeto.data = 'svgs/mapa-geral.svg';
+                btnVoltar.classList.add('hidden');
+                painelInfo.innerHTML = '<h2>Selecione uma Região</h2><p>Clique em uma área do mapa para começar a explorar.</p>';
+                if (elementoSelecionado) {
+                    elementoSelecionado.classList.remove('selecionado');
+                    elementoSelecionado = null;
+                }
+            }
+        } else {
+            // Caso initialViewBox não esteja definido (primeiro carregamento), carrega direto
+            mapaObjeto.data = 'svgs/mapa-geral.svg';
+            btnVoltar.classList.add('hidden');
+            painelInfo.innerHTML = '<h2>Selecione uma Região</h2><p>Clique em uma área do mapa para começar a explorar.</p>';
+            if (elementoSelecionado) {
+                elementoSelecionado.classList.remove('selecionado');
+                elementoSelecionado = null;
+            }
         }
     };
 
@@ -136,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div id="weather-widget">Carregando clima e previsão...</div> 
                 <div id="alerts-widget"></div>
             `;
-            // Chama a função para buscar o clima e previsão com lat/lon
             buscarClimaEPrevisao(dados.nome, dados.lat, dados.lon);
         } else {
             let nomeFormatado = municipioId.replace(/[-_]/g, " ").replace(/\b\w/g, l => l.toUpperCase());
@@ -147,49 +166,99 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- EVENTOS DE CLIQUE ---
+    // Função para animar a viewBox (x, y, width, height)
+    function animateViewBox(svgElement, targetViewBox, duration) {
+        const startViewBox = svgElement.getAttribute('viewBox').split(' ').map(Number);
+        const target = targetViewBox.split(' ').map(Number);
+        let startTime = null;
+
+        function step(currentTime) {
+            if (!startTime) startTime = currentTime;
+            const progress = (currentTime - startTime) / duration;
+
+            if (progress < 1) {
+                const animatedViewBox = startViewBox.map((startVal, i) => 
+                    startVal + (target[i] - startVal) * progress
+                );
+                svgElement.setAttribute('viewBox', animatedViewBox.join(' '));
+                requestAnimationFrame(step);
+            } else {
+                svgElement.setAttribute('viewBox', targetViewBox); // Garante o valor final
+            }
+        }
+        requestAnimationFrame(step);
+    }
+
+
+    // --- EVENTOS PRINCIPAIS ---
 
     mapaObjeto.addEventListener('load', () => {
         const svgDoc = mapaObjeto.contentDocument;
-        if (!svgDoc) return;
+        if (!svgDoc) {
+            console.error("Não foi possível carregar o documento SVG.");
+            return;
+        }
 
-        if (eventosAtivos) eventosAtivos.abort();
-        eventosAtivos = new AbortController();
+        const svgElement = svgDoc.querySelector('svg');
+        if (!svgElement) {
+            console.error("Elemento SVG não encontrado dentro do objeto.");
+            return;
+        }
 
+        // Salva a viewBox inicial do mapa geral no primeiro carregamento
+        // ou quando resetamos para o mapa geral.
+        if (svgElement.id === 'mapa-geral' && !initialViewBox) {
+            initialViewBox = svgElement.getAttribute('viewBox');
+        }
+
+        // --- Adiciona listeners para REGIOES (se for o mapa geral) ---
         const regioesNoMapa = svgDoc.querySelectorAll('.regiao');
-        if (regioesNoMapa.length > 0) {
+        if (regioesNoMapa.length > 0) { // Estamos no mapa geral
             regioesNoMapa.forEach(regiao => {
+                regiao.onclick = null; // Limpa listeners anteriores para evitar duplicação
+
                 regiao.addEventListener('click', (e) => {
-                    e.stopPropagation();
+                    e.stopPropagation(); 
                     const regiaoId = regiao.id;
 
-                    // Adiciona as classes para o efeito de zoom
-                    regiao.classList.add('zoom-selecionado');
+                    // Remove opacidade das outras regiões durante o zoom
                     const outrasRegioes = svgDoc.querySelectorAll('.regiao:not(#' + regiaoId + ')');
                     outrasRegioes.forEach(other => {
-                        other.classList.add('zoom-afastado');
+                        other.style.opacity = 0; // Torna transparente imediatamente
                     });
 
-                    // Após um pequeno atraso, carrega o novo mapa
+                    // Pega o bounding box da região clicada
+                    const bbox = regiao.getBBox(); // Retorna {x, y, width, height}
+                    
+                    // Calcula a nova viewBox para centralizar a região
+                    const padding = 50; // Adiciona um padding ao redor da região
+                    const newX = bbox.x - padding;
+                    const newY = bbox.y - padding;
+                    const newWidth = bbox.width + (padding * 2);
+                    const newHeight = bbox.height + (padding * 2);
+                    
+                    const targetViewBox = `${newX} ${newY} ${newWidth} ${newHeight}`;
+
+                    // Anima a viewBox do SVG
+                    animateViewBox(svgElement, targetViewBox, 300); // 300ms de duração da animação
+
+                    // Após a animação, carrega o mapa da região detalhada
                     setTimeout(() => {
                         carregarMapaRegiao(regiaoId);
-                        // Limpa as classes de zoom/afastamento após a transição
-                        regiao.classList.remove('zoom-selecionado');
-                        outrasRegioes.forEach(other => {
-                            other.classList.remove('zoom-afastado');
-                        });
-                    }, 300); // Deve ser igual ou ligeiramente maior que a duração da transição CSS
-                }, { signal: eventosAtivos.signal });
+                    }, 300); // Tempo igual à duração da animação da viewBox
+                });
             });
         }
 
+        // --- Adiciona listeners para MUNICIPIOS (se for um mapa de região) ---
         const municipiosNoMapa = svgDoc.querySelectorAll('.bairro');
-        if (municipiosNoMapa.length > 0) {
+        if (municipiosNoMapa.length > 0) { // Estamos em um mapa de região
             municipiosNoMapa.forEach(bairro => {
+                bairro.onclick = null; // Limpa listeners anteriores para evitar duplicação
                 bairro.addEventListener('click', (e) => {
                     e.stopPropagation();
                     exibirInfoMunicipio(bairro);
-                }, { signal: eventosAtivos.signal });
+                });
             });
         }
     });
